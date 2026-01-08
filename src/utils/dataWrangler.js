@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 
 function toDay(date) {
+  // Ensure date is a Date object
   const d = date instanceof Date ? date : new Date(date);
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
@@ -51,19 +52,17 @@ export function dominantSportPerDay(sportRecords) {
 }
 
 // =========================
-// Training intensity (calories proxy)
+// Training minutes per day from sport records
 // =========================
-export function trainingMinutesPerDay(fitnessDaily) {
-  const calories = fitnessDaily.filter((d) => d.key === "calories");
-
-  const grouped = d3.group(calories, (d) => {
+export function trainingMinutesPerDay(sportRecords) {
+  const grouped = d3.group(sportRecords, (d) => {
     const date = d.time instanceof Date ? d.time : new Date(d.time);
     return toDay(date).getTime();
   });
 
   return Array.from(grouped, ([dayTimestamp, records]) => ({
     date: new Date(+dayTimestamp),
-    trainingMinutes: d3.sum(records, (d) => d.value),
+    trainingMinutes: d3.sum(records, (d) => (d.duration || 0) / 60), // duration in seconds → minutes
   }));
 }
 
@@ -163,12 +162,12 @@ export function createMasterDataset({
 }
 
 // =========================
-// Main wrangling function - THIS WAS MISSING!
+// Main wrangling function
 // =========================
 export function wrangleData(fitnessDaily, sportRecords, calendar) {
   const stepsDaily = stepsPerDay(fitnessDaily);
   const caloriesDaily = caloriesPerDay(fitnessDaily);
-  const trainingDaily = trainingMinutesPerDay(fitnessDaily);
+  const trainingDaily = trainingMinutesPerDay(sportRecords);
   const dominantSportDaily = dominantSportPerDay(sportRecords);
   const calendarDaily = calendarPerDay(calendar);
 
