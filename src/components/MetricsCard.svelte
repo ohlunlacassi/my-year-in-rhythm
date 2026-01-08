@@ -38,7 +38,6 @@
   function update(time) {
     const progress = Math.min((time - startTime) / duration, 1);
     
-    // Exponential easing - ช้ามากกกก ตอนท้าย
     const eased = progress === 1 ? 1 : 1 - Math.pow(2, -15 * progress);
     
     displayValue = Math.round(eased * target);

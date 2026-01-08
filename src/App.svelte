@@ -6,8 +6,8 @@
   import MetricsCard from './components/MetricsCard.svelte';
   import ProgressBar from './components/ProgressBar.svelte';
   import Waveform from './components/Waveform.svelte';
-  import TrackBreakdown from './components/TrackBreakdown.svelte';
   import HeartVisualization from './components/HeartVisualization.svelte';
+  import ProgressMilestones from './components/ProgressMilestones.svelte';
   
   import { loadData } from './utils/dataLoader.js';
   import { wrangleData } from './utils/dataWrangler.js';
@@ -216,6 +216,10 @@
   <div class="section-slide legend-section">
     {#if dataLoaded && sportData.length > 0}
       <div class="legend-wrapper">
+        <div class="energy-description">
+          <p>Energy burned across {sportData.length} activities. Each pulse ring represents calorie contribution from different sports.</p>
+        </div>
+        
         <div class="legend-grid">
           {#each sportData as sport}
             <div class="legend-item">
@@ -236,7 +240,14 @@
       description="How training evolved throughout the year"
       dark={true}
     >
-      <PlaceholderViz height="450px" label="Progress Timeline" />
+      {#if dataLoaded}
+        <ProgressMilestones 
+          sportRecords={rawSportRecords}
+          fitnessDaily={master}
+        />
+      {:else}
+        <PlaceholderViz height="450px" label="Progress Timeline" />
+      {/if}
     </ScrollSection>
   </div>
 
@@ -368,6 +379,21 @@
   .legend-wrapper {
     max-width: 1200px;
     width: 100%;
+  }
+  
+  .energy-description {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto 30px auto;
+  }
+  
+  .energy-description p {
+    font-family: monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
   }
   
   .legend-grid {
