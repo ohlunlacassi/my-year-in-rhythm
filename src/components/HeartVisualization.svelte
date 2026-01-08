@@ -27,6 +27,7 @@
     'waist_training': { color: '#ff6b6b', label: 'Waist' },
     'back_training': { color: '#ffd166', label: 'Back' },
     'high_interval_training': { color: '#ef233c', label: 'HIIT' },
+    'rope_skipping': { color: '#d90429', label: 'Jump Rope' },
   };
   
   let sportData = [];
@@ -54,10 +55,10 @@
         caloriesK: (calories / 1000).toFixed(1),
         color: sportPatterns[sport]?.color || '#35d1c5',
         label: sportPatterns[sport]?.label || sport.replace(/_/g, ' '),
-        angle: 0
+        angle: 0 // will be set later
       }))
       .sort((a, b) => b.calories - a.calories)
-      .filter(d => d.calories > 0 && d.sport !== 'rope_skipping');
+      .filter(d => d.calories > 0 && d.sport !== 'rope_skipping'); // ลบ rope_skipping
     
     // Assign angles evenly around the heart
     sportData.forEach((d, i) => {
@@ -215,9 +216,9 @@
       let scale = 1;
       
       if (beatPhase < 0.15) {
-        scale = 1 + (beatPhase / 0.15) * 0.08;
+        scale = 1 + (beatPhase / 0.15) * 0.08; // Beat up - ขยายแค่ 8%
       } else if (beatPhase < 0.25) {
-        scale = 1.08 - ((beatPhase - 0.15) / 0.1) * 0.08;
+        scale = 1.08 - ((beatPhase - 0.15) / 0.1) * 0.08; // Beat down - หดกลับมา
       }
       
       heart.style('transform', `scale(${scale})`);
@@ -333,10 +334,6 @@
   <div class="heart-container">
     <svg bind:this={svgElement}></svg>
   </div>
-  
-  <div class="energy-description">
-    <p>Energy burned across {sportData.length} activities. Each pulse ring represents calorie contribution from different sports.</p>
-  </div>
 </div>
 
 <style>
@@ -346,7 +343,7 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    margin-top: -30px;
+    margin-top: -120px;
   }
   
   .heart-container {
@@ -357,21 +354,6 @@
     margin-bottom: 0;
     position: relative;
     z-index: 1;
-  }
-  
-  .energy-description {
-    max-width: 800px;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  .energy-description p {
-    font-family: monospace;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.6);
-    margin: 0;
   }
   
   @media (max-width: 768px) {
