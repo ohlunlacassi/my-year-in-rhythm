@@ -58,7 +58,7 @@
         angle: 0 // will be set later
       }))
       .sort((a, b) => b.calories - a.calories)
-      .filter(d => d.calories > 0 && d.sport !== 'rope_skipping'); // ลบ rope_skipping
+      .filter(d => d.calories > 0);
     
     // Assign angles evenly around the heart
     sportData.forEach((d, i) => {
@@ -79,7 +79,7 @@
   
   function setupVisualization() {
     const width = Math.min(containerWidth, 1000);
-    const height = 550;
+    const height = 500; // Reduced from 650
     
     const svg = d3.select(svgElement)
       .attr('width', width)
@@ -122,9 +122,9 @@
     pulseMerge.append('feMergeNode').attr('in', 'coloredBlur');
     pulseMerge.append('feMergeNode').attr('in', 'SourceGraphic');
     
-    // Main group
+    // Main group - moved up
     const g = svg.append('g')
-      .attr('transform', `translate(${width/2},${height/2})`);
+      .attr('transform', `translate(${width/2},${height/2 - 10})`);
     
     // Background circles for depth
     for (let i = 3; i > 0; i--) {
@@ -135,23 +135,7 @@
         .attr('stroke-width', 1);
     }
     
-    // Pulse container
-    g.append('g').attr('class', 'pulses');
-    
-    // Particles container
-    g.append('g').attr('class', 'particles');
-    
-    // Heart
-    const heartPath = "M0,-40 C-25,-65 -65,-65 -65,-35 C-65,-15 -45,0 0,35 C45,0 65,-15 65,-35 C65,-65 25,-65 0,-40 Z";
-    
-    g.append('path')
-      .attr('class', 'heart')
-      .attr('d', heartPath)
-      .attr('fill', 'url(#heart-gradient)')
-      .attr('filter', 'url(#heart-glow)')
-      .style('transform-origin', 'center');
-    
-    // Heart gradient
+    // Heart gradient (DEFINE FIRST)
     const heartGradient = defs.append('linearGradient')
       .attr('id', 'heart-gradient')
       .attr('x1', '0%')
@@ -169,7 +153,23 @@
       .attr('stop-color', '#ff6b81')
       .attr('stop-opacity', 0.8);
     
-    // Center label
+    // Heart (DRAW BEFORE PARTICLES)
+    const heartPath = "M0,-40 C-25,-65 -65,-65 -65,-35 C-65,-15 -45,0 0,35 C45,0 65,-15 65,-35 C65,-65 25,-65 0,-40 Z";
+    
+    g.append('path')
+      .attr('class', 'heart')
+      .attr('d', heartPath)
+      .attr('fill', 'url(#heart-gradient)')
+      .attr('filter', 'url(#heart-glow)')
+      .style('transform-origin', 'center');
+    
+    // Pulse container (AFTER HEART)
+    g.append('g').attr('class', 'pulses');
+    
+    // Particles container (AFTER HEART)
+    g.append('g').attr('class', 'particles');
+    
+    // Center labels (LAST so they appear on top)
     g.append('text')
       .attr('y', -60)
       .attr('text-anchor', 'middle')
@@ -177,23 +177,26 @@
       .style('font-size', '12px')
       .style('fill', 'rgba(255, 255, 255, 0.5)')
       .style('letter-spacing', '2px')
+      .style('pointer-events', 'none')
       .text('TOTAL ENERGY');
     
     g.append('text')
-      .attr('y', 70)
+      .attr('y', 0)
       .attr('text-anchor', 'middle')
       .style('font-family', 'monospace')
       .style('font-size', '36px')
       .style('font-weight', '200')
       .style('fill', '#ff7a5c')
+      .style('pointer-events', 'none')
       .text((totalCalories / 1000).toFixed(1) + 'K');
     
     g.append('text')
-      .attr('y', 92)
+      .attr('y', 20)
       .attr('text-anchor', 'middle')
       .style('font-family', 'monospace')
       .style('font-size', '14px')
       .style('fill', 'rgba(255, 255, 255, 0.5)')
+      .style('pointer-events', 'none')
       .text('cal');
   }
   
@@ -216,9 +219,9 @@
       let scale = 1;
       
       if (beatPhase < 0.15) {
-        scale = 1 + (beatPhase / 0.15) * 0.08; // Beat up - ขยายแค่ 8%
+        scale = 1 + (beatPhase / 0.15) * 0.15; // Beat up
       } else if (beatPhase < 0.25) {
-        scale = 1.08 - ((beatPhase - 0.15) / 0.1) * 0.08; // Beat down - หดกลับมา
+        scale = 1.15 - ((beatPhase - 0.15) / 0.1) * 0.15; // Beat down
       }
       
       heart.style('transform', `scale(${scale})`);
@@ -330,20 +333,20 @@
   }
 </script>
 
-<div class="visualization-wrapper">
+<section class="heart-section">
   <div class="heart-container">
     <svg bind:this={svgElement}></svg>
   </div>
-</div>
+</section>
 
 <style>
-  .visualization-wrapper {
+  .heart-section {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 20px;
-    margin-top: -120px;
+    padding: 0 20px;
+    position: relative;
   }
   
   .heart-container {
@@ -351,14 +354,8 @@
     max-width: 1000px;
     display: flex;
     justify-content: center;
-    margin-bottom: 0;
     position: relative;
     z-index: 1;
-  }
-  
-  @media (max-width: 768px) {
-    .heart-container {
-      max-width: 100%;
-    }
+    margin-top: -40px;
   }
 </style>
