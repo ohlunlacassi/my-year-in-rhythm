@@ -11,7 +11,7 @@
   let containerHeight = 0;
   let selectedSport = 'ALL';
   
-  const margin = { top: 60, right: 40, bottom: 200, left: 40 };
+  const margin = { top: 60, right: 40, bottom: 80, left: 40 }; // REDUCED from 200 to 80
   
   // Sport patterns
   const sportPatterns = {
@@ -95,7 +95,7 @@
     if (!svgElement || processedData.length === 0) return;
     
     const width = containerWidth - margin.left - margin.right;
-    const height = containerHeight || 600;
+    const height = containerHeight || 500; // Reduced from 600 to 500
     
     const svg = d3.select(svgElement)
       .attr('width', containerWidth)
@@ -140,7 +140,7 @@
     }
     
     const startDate = new Date('2024-10-01');
-    const endDate = new Date('2025-12-31'); // สิ้นสุด 31 ธันวาคม 2025 (ข้อมูลจริงถึง 18 ธ.ค.)
+    const endDate = new Date('2025-12-31');
     const allDates = [startDate, endDate];
     const weeks = d3.timeWeeks(startDate, endDate);
     
@@ -161,7 +161,9 @@
       .domain([startDate, endDate])
       .range([0, width]);
     
-    const centerY = (height - margin.top - margin.bottom) / 2;
+    // Move center down closer to x-axis
+    const visualHeight = height - margin.top - margin.bottom;
+    const centerY = visualHeight * 0.75; // 75% down - closer to x-axis
     const maxMinutes = d3.max(weeklyHeartbeats, d => d.minutes);
     
     // ECG Grid
@@ -208,13 +210,13 @@
           
           if (pattern.pattern === 'sharp') {
             ecgPoints.push({ x: beatX - 3, y: centerY });
-            ecgPoints.push({ x: beatX - 2, y: centerY - amp * 0.2 });  // เล็กน้อย
+            ecgPoints.push({ x: beatX - 2, y: centerY - amp * 0.2 });
             ecgPoints.push({ x: beatX - 1, y: centerY });
-            ecgPoints.push({ x: beatX, y: centerY - amp * 0.1 });       // แก้จาก +0.3 เป็น -0.1
-            ecgPoints.push({ x: beatX + 1, y: centerY - amp });         // spike ใหญ่
-            ecgPoints.push({ x: beatX + 2, y: centerY - amp * 0.1 });   // แก้จาก +0.3 เป็น -0.1
+            ecgPoints.push({ x: beatX, y: centerY - amp * 0.1 });
+            ecgPoints.push({ x: beatX + 1, y: centerY - amp });
+            ecgPoints.push({ x: beatX + 2, y: centerY - amp * 0.1 });
             ecgPoints.push({ x: beatX + 3, y: centerY });
-            ecgPoints.push({ x: beatX + 5, y: centerY - amp * 0.15 });  // แก้จาก -0.3 เป็น -0.15
+            ecgPoints.push({ x: beatX + 5, y: centerY - amp * 0.15 });
             ecgPoints.push({ x: beatX + 7, y: centerY });
           } else if (pattern.pattern === 'moderate') {
             ecgPoints.push({ x: beatX - 2, y: centerY });
@@ -252,7 +254,7 @@
     .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
     .attr('stroke-dashoffset', totalLength)
     .transition()
-    .duration(10000) // 5 วินาที
+    .duration(10000)
     .ease(d3.easeLinear)
     .attr('stroke-dashoffset', 0)
     .on('end', () => {
@@ -535,7 +537,7 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 500px;
+    min-height: 450px; /* Reduced from 500px */
     background: #000000;
   }
   
