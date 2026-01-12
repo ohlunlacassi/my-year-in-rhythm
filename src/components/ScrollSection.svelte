@@ -1,9 +1,11 @@
 <script>
   import { onMount } from 'svelte';
+  import InfoTooltip from './InfoTooltip.svelte';
   
   export let title = '';
   export let description = '';
   export let dark = false;
+  export let infoTooltip = '';
   
   let sectionElement;
   let visible = false;
@@ -46,7 +48,12 @@
         <div class="title-accent"></div>
         <h2 class="section-title">{title}</h2>
         {#if description}
-          <p class="section-description">{description}</p>
+          <div class="description-with-info">
+            <p class="section-description">{description}</p>
+            {#if infoTooltip}
+              <InfoTooltip text={infoTooltip} />
+            {/if}
+          </div>
         {/if}
       </div>
     {/if}
@@ -156,10 +163,17 @@
   }
   
   .section-description {
-    font-size: clamp(0.95rem, 1.4vw, 1.05rem);  /* ← ลดขนาด */
+    font-size: clamp(0.95rem, 1.4vw, 1.05rem);
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.5);
     font-weight: 300;
+    margin: 0;
+  }
+  
+  .description-with-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
   
   .section-content {
