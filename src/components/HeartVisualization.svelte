@@ -79,7 +79,7 @@
   
   function setupVisualization() {
     const width = Math.min(containerWidth, 1000);
-    const height = 500; // Reduced from 650
+    const height = 500;
     
     const svg = d3.select(svgElement)
       .attr('width', width)
