@@ -8,6 +8,8 @@
   let svgElement;
   let containerWidth = 0;
   let impactData = [];
+  let visible = false;
+  let hasAnimated = false;
   
   const categoryConfig = {
     health: {
@@ -56,9 +58,36 @@
     if (master.length === 0) return;
     
     containerWidth = svgElement?.parentElement?.clientWidth || 800;
-    
     analyzeEventImpact();
-    drawImpactChart();
+    
+    // Setup Intersection Observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !hasAnimated) {
+          visible = true; // Fade in container
+          hasAnimated = true;
+          
+          // Start chart animation after container fades in
+          setTimeout(() => {
+            drawImpactChart();
+          }, 400); // Wait for container fade-in
+          
+          observer.disconnect(); // Stop observing
+        }
+      });
+    }, {
+      threshold: 0.25, // Trigger when 25% visible
+      rootMargin: '0px 0px -50px 0px' // Start slightly before fully visible
+    });
+    
+    // Observe the container
+    const container = svgElement?.closest('.impact-container');
+    if (container) {
+      observer.observe(container);
+    }
+    
+    // Cleanup
+    return () => observer.disconnect();
   });
   
   function analyzeEventImpact() {
@@ -372,7 +401,7 @@
   }
 </script>
 
-<div class="impact-container">
+<div class="impact-container" class:visible>
   <svg bind:this={svgElement}></svg>
 </div>
 
@@ -384,10 +413,31 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .impact-container.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
   
   .impact-container svg {
     display: block;
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .impact-container {
+      transition: opacity 0.3s ease;
+      transform: none;
+    }
+    
+    .impact-container.visible {
+      transform: none;
+    }
   }
   
   @media (max-width: 768px) {
