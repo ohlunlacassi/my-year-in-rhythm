@@ -81,7 +81,7 @@
       events.forEach(event => {
         const dateKey = d3.timeFormat('%Y-%m-%d')(event.start);
         const dayData = dateMap.get(dateKey);
-        if (dayData && dayData.trainingMinutes > 0) { // Only active days!
+        if (dayData && dayData.trainingMinutes > 0) {
           trainingMinutes.push(dayData.trainingMinutes);
         }
       });
@@ -89,8 +89,8 @@
       if (trainingMinutes.length > 0) {
         categoryStats[category] = {
           avgMinutes: d3.mean(trainingMinutes),
-          count: trainingMinutes.length, // Count of active days only
-          totalDays: events.length // Total days with this event
+          count: trainingMinutes.length,
+          totalDays: events.length
         };
       }
     });
@@ -102,7 +102,7 @@
     
     const normalDaysTraining = master
       .filter(d => !eventDates.has(d3.timeFormat('%Y-%m-%d')(d.date)))
-      .filter(d => d.trainingMinutes > 0) // Only active days!
+      .filter(d => d.trainingMinutes > 0)
       .map(d => d.trainingMinutes);
     
     const normalAvg = d3.mean(normalDaysTraining);
@@ -115,15 +115,15 @@
     
     // Create impact data with % change
     impactData = Object.entries(categoryStats)
-      .filter(([cat]) => categoryConfig[cat]) // Only known categories
+      .filter(([cat]) => categoryConfig[cat])
       .map(([category, stats]) => {
         const change = ((stats.avgMinutes - normalAvg) / normalAvg) * 100;
         return {
           category,
           ...categoryConfig[category],
           avgMinutes: stats.avgMinutes,
-          count: stats.count, // Active days count
-          totalDays: stats.totalDays, // Total days with event
+          count: stats.count,
+          totalDays: stats.totalDays,
           change: category === 'normal' ? 0 : change
         };
       })
@@ -133,12 +133,17 @@
         return d.category === 'normal' || d.count >= 5;
       })
       .sort((a, b) => {
-        // Normal Days always last (baseline)
-        if (a.category === 'normal') return 1;
-        if (b.category === 'normal') return -1;
-        // Others sorted by avgMinutes descending
+        // Sort by avgMinutes descending
         return b.avgMinutes - a.avgMinutes;
       });
+    
+    // Move Normal Days to the middle position
+    const normalIndex = impactData.findIndex(d => d.category === 'normal');
+    if (normalIndex !== -1) {
+      const normalData = impactData.splice(normalIndex, 1)[0];
+      const middleIndex = Math.floor(impactData.length / 2);
+      impactData.splice(middleIndex, 0, normalData);
+    }
     
     console.log('📊 Event Impact Analysis (active days only):', impactData);
   }
@@ -146,15 +151,27 @@
   function drawImpactChart() {
     if (!svgElement || impactData.length === 0) return;
     
-    const margin = { top: 40, right: 160, bottom: 100, left: 100 }; // Increased bottom for note
-    const width = Math.min(containerWidth, 1000) - margin.left - margin.right; // Back to 1000 since fewer bars
+    const margin = { top: 40, right: 60, bottom: 100, left: 100 };
+    const width = Math.min(containerWidth, 1000) - margin.left - margin.right;
     const height = 450 - margin.top - margin.bottom;
     
     const svg = d3.select(svgElement)
       .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom);
+      .attr('height', height + margin.top + margin.bottom)
+      .attr('role', 'img')
+      .attr('aria-label', 'Bar chart showing the impact of different life events on training intensity compared to normal days');
     
     svg.selectAll('*').remove();
+    
+    // Add title for screen readers
+    svg.append('title')
+      .text('Event Impact on Training - Bar chart comparing average training minutes across different event categories');
+    
+    // Add description for screen readers
+    svg.append('desc')
+      .text(`This chart shows how different life events affect training intensity. ${impactData.map(d => 
+        `${d.label}: ${Math.round(d.avgMinutes)} minutes average across ${d.count} active days${d.change !== 0 ? `, ${d.change > 0 ? '+' : ''}${Math.round(d.change)}% compared to normal days` : ''}`
+      ).join('. ')}`);
     
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -173,6 +190,7 @@
     // Grid lines
     g.append('g')
       .attr('class', 'grid')
+      .attr('aria-hidden', 'true')
       .selectAll('line')
       .data(yScale.ticks(6))
       .enter()
@@ -190,6 +208,8 @@
       .enter()
       .append('rect')
       .attr('class', 'bar')
+      .attr('role', 'graphics-symbol')
+      .attr('aria-label', d => `${d.label}: ${Math.round(d.avgMinutes)} minutes average, ${d.count} active days${d.change !== 0 ? `, ${d.change > 0 ? 'plus' : 'minus'} ${Math.abs(Math.round(d.change))} percent change` : ''}`)
       .attr('x', d => xScale(d.category))
       .attr('width', xScale.bandwidth())
       .attr('y', height)
@@ -245,6 +265,52 @@
       .duration(400)
       .attr('y', d => yScale(d.avgMinutes) - 28)
       .style('opacity', 1);
+    
+    // Change indicators (above bars)
+    impactData.forEach((d, i) => {
+      if (d.category === 'normal') return;
+      
+      const x = xScale(d.category) + xScale.bandwidth() / 2;
+      const y = yScale(d.avgMinutes) - 50;
+      
+      const changeGroup = g.append('g')
+        .attr('transform', `translate(${x}, ${y})`);
+      
+      // Change badge
+      const isNegative = d.change < 0;
+      const changeText = `${isNegative ? '' : '+'}${Math.round(d.change)}%`;
+      const arrow = isNegative ? '↓' : '↑';
+      
+      changeGroup.append('rect')
+        .attr('x', -40)
+        .attr('y', -12)
+        .attr('width', 80)
+        .attr('height', 24)
+        .attr('rx', 12)
+        .attr('fill', isNegative ? 'rgba(255, 122, 92, 0.2)' : 'rgba(53, 209, 197, 0.2)')
+        .attr('stroke', isNegative ? '#ff7a5c' : '#35d1c5')
+        .attr('stroke-width', 1)
+        .style('opacity', 0)
+        .transition()
+        .delay(i * 150 + 800)
+        .duration(400)
+        .style('opacity', 1);
+      
+      changeGroup.append('text')
+        .attr('x', 0)
+        .attr('y', 4)
+        .attr('text-anchor', 'middle')
+        .style('font-family', 'monospace')
+        .style('font-size', '12px')
+        .style('font-weight', 'bold')
+        .style('fill', isNegative ? '#ff7a5c' : '#35d1c5')
+        .style('opacity', 0)
+        .text(`${changeText} ${arrow}`)
+        .transition()
+        .delay(i * 150 + 800)
+        .duration(400)
+        .style('opacity', 1);
+    });
     
     // X Axis with icons
     const xAxis = g.append('g')
@@ -312,52 +378,6 @@
       .style('letter-spacing', '1px')
       .text('AVG TRAINING');
     
-    // Change indicators (right side)
-    impactData.forEach((d, i) => {
-      if (d.category === 'normal') return; // Skip baseline
-      
-      const x = width + 20;
-      const y = yScale(d.avgMinutes);
-      
-      const changeGroup = g.append('g')
-        .attr('transform', `translate(${x}, ${y})`);
-      
-      // Change badge
-      const isNegative = d.change < 0;
-      const changeText = `${isNegative ? '' : '+'}${Math.round(d.change)}%`;
-      const arrow = isNegative ? '↓' : '↑';
-      
-      changeGroup.append('rect')
-        .attr('x', 0)
-        .attr('y', -12)
-        .attr('width', 80)
-        .attr('height', 24)
-        .attr('rx', 12)
-        .attr('fill', isNegative ? 'rgba(255, 122, 92, 0.2)' : 'rgba(53, 209, 197, 0.2)')
-        .attr('stroke', isNegative ? '#ff7a5c' : '#35d1c5')
-        .attr('stroke-width', 1)
-        .style('opacity', 0)
-        .transition()
-        .delay(i * 150 + 800)
-        .duration(400)
-        .style('opacity', 1);
-      
-      changeGroup.append('text')
-        .attr('x', 40)
-        .attr('y', 4)
-        .attr('text-anchor', 'middle')
-        .style('font-family', 'monospace')
-        .style('font-size', '12px')
-        .style('font-weight', 'bold')
-        .style('fill', isNegative ? '#ff7a5c' : '#35d1c5')
-        .style('opacity', 0)
-        .text(`${changeText} ${arrow}`)
-        .transition()
-        .delay(i * 150 + 800)
-        .duration(400)
-        .style('opacity', 1);
-    });
-    
     // Title
     svg.append('text')
       .attr('x', margin.left)
@@ -383,23 +403,33 @@
 <div class="impact-container">
   <svg bind:this={svgElement}></svg>
   
-  <div class="stats-summary">
+  <div class="stats-summary" role="list" aria-label="Detailed statistics for each event category">
     {#each impactData as item}
-      <div class="stat-card" style="border-color: {item.color}">
-        <div class="stat-icon">{item.icon}</div>
+      <div 
+        class="stat-card" 
+        style="border-color: {item.color}"
+        role="listitem"
+        aria-label="{item.label} statistics"
+        tabindex="0"
+      >
+        <div class="stat-icon" aria-hidden="true">{item.icon}</div>
         <div class="stat-content">
           <div class="stat-label">{item.label}</div>
-          <div class="stat-value">{Math.round(item.avgMinutes)} min/day</div>
-          <div class="stat-count">{item.count} active days</div>
+          <div class="stat-value" aria-label="{Math.round(item.avgMinutes)} minutes per day">{Math.round(item.avgMinutes)} min/day</div>
+          <div class="stat-count" aria-label="{item.count} active days">{item.count} active days</div>
           {#if item.category !== 'normal' && item.totalDays !== item.count}
-            <div class="stat-active-rate">{Math.round(item.count / item.totalDays * 100)}% active</div>
+            <div class="stat-active-rate" aria-label="{Math.round(item.count / item.totalDays * 100)} percent active rate">{Math.round(item.count / item.totalDays * 100)}% active</div>
           {/if}
           {#if item.category !== 'normal'}
-            <div class="stat-change" class:negative={item.change < 0}>
+            <div 
+              class="stat-change" 
+              class:negative={item.change < 0}
+              aria-label="{item.change > 0 ? 'plus' : 'minus'} {Math.abs(Math.round(item.change))} percent {item.change > 0 ? 'increase' : 'decrease'} compared to normal days"
+            >
               {item.change > 0 ? '+' : ''}{Math.round(item.change)}% {item.change < 0 ? '↓' : '↑'}
             </div>
           {:else}
-            <div class="stat-baseline">baseline</div>
+            <div class="stat-baseline" aria-label="baseline reference">baseline</div>
           {/if}
         </div>
       </div>
@@ -445,6 +475,28 @@
   .stat-card:hover {
     background: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
+  }
+  
+  /* Keyboard focus styles */
+  .stat-card:focus {
+    outline: 2px solid #35d1c5;
+    outline-offset: 2px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .stat-card:focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .stat-card {
+      transition: none;
+    }
+    
+    .stat-card:hover {
+      transform: none;
+    }
   }
   
   .stat-icon {
@@ -504,5 +556,16 @@
     color: rgba(255, 255, 255, 0.4);
     font-style: italic;
     margin-top: 4px;
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .stat-card {
+      border-width: 2px;
+    }
+    
+    .stat-card:focus {
+      outline-width: 3px;
+    }
   }
 </style>
