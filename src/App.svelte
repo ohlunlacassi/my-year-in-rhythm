@@ -330,14 +330,6 @@
   </section>
 </div>
 
-<!-- Footer -->
-<footer class="footer" role="contentinfo">
-  <div class="footer-content">
-    <p class="footer-text">Data source: Mi Fitness (Oct 2024 - Dec 2024)</p>
-    <p class="footer-credit">Designed & Built by Phatjira Rungsakullikit</p>
-  </div>
-</footer>
-
 <style>
   :global(body) {
     background: #0a0a0a;
