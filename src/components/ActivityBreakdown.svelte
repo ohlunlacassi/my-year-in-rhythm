@@ -14,7 +14,7 @@
           <div class="legend-item">
             <span class="legend-pulse" style="background: {sport.color}"></span>
             <span class="legend-label">{sport.label}</span>
-            <span class="legend-calories">{sport.caloriesK} kcal</span>
+            <span class="legend-calories">{sport.caloriesK}k cal</span>
           </div>
         {/each}
       </div>
