@@ -10,14 +10,19 @@
   });
 </script>
 
-<section class="landing" class:visible>
+<section 
+  class="landing" 
+  class:visible 
+  role="region" 
+  aria-label="Introduction to My Year in Rhythm data visualization"
+>
   <div class="container">
-    <div class="grain-overlay"></div>
+    <div class="grain-overlay" aria-hidden="true"></div>
     
-    <!-- เพิ่ม Dumbbell Animation -->
-    <!-- เพิ่ม Dumbbell Animation -->
-<div class="dumbbell-animation">
-  <svg viewBox="0 0 200 100" class="dumbbell">
+    <!-- Dumbbell Animation - Decorative -->
+<div class="dumbbell-animation" aria-hidden="true">
+  <svg viewBox="0 0 200 100" class="dumbbell" role="img" aria-label="Decorative dumbbell animation">
+    <title>Animated dumbbell representing fitness</title>
     <!-- Left weight plate -->
     <rect x="10" y="25" width="30" height="50" rx="5" fill="url(#gradient1)" class="weight left-weight"/>
     
@@ -42,17 +47,17 @@
   </svg>
 </div>
     
-    <p class="eyebrow">
-      <span class="dot"></span>
+    <p class="eyebrow" role="doc-subtitle">
+      <span class="dot" aria-hidden="true"></span>
       DATA STORY / 2024 - 25
     </p>
     
-    <h1 class="title">
+    <h1 class="title" id="main-title">
       <span class="title-line">My Year</span>
       <span class="title-line">in Rhythm</span>
     </h1>
     
-    <div class="description">
+    <div class="description" role="article" aria-labelledby="main-title">
       <p class="lead">
         This visualization explores a full year of personal fitness data from Mi Fitness—steps, 
         training duration, activity types, calories, and breaks—enriched with calendar events for context.
@@ -74,10 +79,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: 
-      radial-gradient(circle at 20% 50%, rgba(53, 209, 197, 0.03) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(255, 122, 92, 0.02) 0%, transparent 50%),
-      linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%);
+    background: transparent;
     padding: 60px 24px;
     opacity: 0;
     transform: translateY(20px);
@@ -141,7 +143,7 @@
     transform: translateY(20px);
   }
   to {
-    opacity: 0.8;  /* เปลี่ยนจาก 0.5 เป็น 0.8 */
+    opacity: 0.8;
     transform: translateY(0);
   }
 }
@@ -293,6 +295,74 @@
     
     .title {
       margin-bottom: 40px;
+    }
+  }
+  
+  /* Accessibility: Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    .landing {
+      transition: opacity 0.3s ease;
+    }
+    
+    .dumbbell-animation {
+      animation: none;
+    }
+    
+    .dumbbell {
+      animation: none;
+      filter: drop-shadow(0 0 20px rgba(53, 209, 197, 0.6));
+    }
+    
+    .weight {
+      animation: none;
+    }
+    
+    .dot {
+      animation: none;
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .title-line {
+      animation: none;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Accessibility: High Contrast Support */
+  @media (prefers-contrast: high) {
+    .eyebrow {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .title-line {
+      -webkit-text-fill-color: #ffffff;
+    }
+    
+    .lead {
+      color: #ffffff;
+    }
+    
+    .secondary {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .dot {
+      box-shadow: 0 0 20px rgba(53, 209, 197, 1);
+    }
+  }
+  
+  /* Focus Indicators for Keyboard Navigation */
+  .landing:focus-visible {
+    outline: 2px solid #35d1c5;
+    outline-offset: 4px;
+  }
+  
+  /* Ensure text remains readable */
+  @media (prefers-color-scheme: light) {
+    .landing {
+      color: #0f0f0f;
     }
   }
 </style>
