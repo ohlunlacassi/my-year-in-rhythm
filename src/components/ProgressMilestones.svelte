@@ -361,6 +361,7 @@
     const finalText = g.append('text')
       .attr('x', width + 10)
       .attr('y', yScale(finalData.hours))
+      .attr('text-anchor', 'end')
       .style('font-family', 'monospace')
       .style('font-size', '18px')
       .style('font-weight', 'bold')
