@@ -4,6 +4,7 @@
   import ScrollSection from './components/ScrollSection.svelte';
   import PlaceholderViz from './components/PlaceholderViz.svelte';
   import MetricsCard from './components/MetricsCard.svelte';
+  import RunningTrack from './components/RunningTrack.svelte';
   import ProgressBar from './components/ProgressBar.svelte';
   import Waveform from './components/Waveform.svelte';
   import HeartVisualization from './components/HeartVisualization.svelte';
@@ -18,7 +19,7 @@
   let currentSection = 0;
   let scrollContainer;
   
-  const totalSections = 7;
+  const totalSections = 8;
   
   let metrics = {
     totalTrainingHours: 0,
@@ -179,6 +180,20 @@
       {/if}
     </ScrollSection>
   </div>
+
+<!-- Steps Traveled Section -->
+<div class="section-slide">
+  <ScrollSection 
+    title="Steps Traveled"
+    description="The cumulative journey of every step taken"
+  >
+    {#if dataLoaded}
+      <RunningTrack master={master} />
+    {:else}
+      <PlaceholderViz height="600px" label="Running Track" />
+    {/if}
+  </ScrollSection>
+</div>
 
   <!-- The Ups and Downs Section -->
   <div class="section-slide">
