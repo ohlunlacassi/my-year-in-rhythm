@@ -18,6 +18,7 @@
   
   let currentSection = 0;
   let scrollContainer;
+  let prefersReducedMotion = false;
   
   const totalSections = 8;
   
@@ -57,6 +58,15 @@
   
   onMount(async () => {
     try {
+      // Check for reduced motion preference
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      prefersReducedMotion = mediaQuery.matches;
+      
+      // Listen for changes to reduced motion preference
+      mediaQuery.addEventListener('change', (e) => {
+        prefersReducedMotion = e.matches;
+      });
+      
       console.log('Starting to load data...');
       
       const rawData = await loadData();
@@ -120,10 +130,30 @@
       scrollContainer.addEventListener('scroll', handleScroll);
     }
     
+    // Keyboard navigation
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault();
+        navigateToSection(currentSection + 1);
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        navigateToSection(currentSection - 1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        navigateToSection(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        navigateToSection(totalSections - 1);
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    
     return () => {
       if (scrollContainer) {
         scrollContainer.removeEventListener('scroll', handleScroll);
       }
+      document.removeEventListener('keydown', handleKeyDown);
     };
   });
   
@@ -135,6 +165,16 @@
     currentSection = Math.min(Math.max(0, newSection), totalSections - 1);
   }
   
+  function navigateToSection(sectionIndex) {
+    if (!scrollContainer) return;
+    const targetSection = Math.min(Math.max(0, sectionIndex), totalSections - 1);
+    const sectionHeight = scrollContainer.offsetHeight;
+    scrollContainer.scrollTo({
+      top: targetSection * sectionHeight,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth'
+    });
+  }
+  
   function handleTrackFilter(event) {
     selectedSport = event.detail.sport;
     console.log('Selected sport:', selectedSport);
@@ -143,20 +183,31 @@
 
 <ProgressBar total={totalSections} current={currentSection} />
 
-<div class="scroll-wrapper" bind:this={scrollContainer}>
+<!-- Skip to content link for keyboard users -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<div 
+  class="scroll-wrapper" 
+  bind:this={scrollContainer}
+  role="main"
+  id="main-content"
+  aria-label="Fitness data story sections"
+  tabindex="0"
+>
   <!-- Landing Page -->
-  <div class="section-slide">
+  <section class="section-slide" aria-label="Landing page">
     <Landing />
-  </div>
+  </section>
 
   <!-- Pulse & Pause Section -->
-  <div class="section-slide">
+  <section class="section-slide" aria-label="Pulse and Pause metrics">
     <ScrollSection 
       title="Pulse & Pause"
       description="The year's performance summarized in key metrics"
+      infoTooltip="Your fitness journey distilled into three core metrics: total training hours accumulated, days you stayed active, and rest days taken. Together they paint the rhythm of your year."
     >
       {#if dataLoaded}
-        <div class="metrics-grid">
+        <div class="metrics-grid" role="list" aria-label="Key fitness metrics">
           <MetricsCard 
             title="Total Training Duration" 
             value={metrics.totalTrainingHours} 
@@ -174,18 +225,19 @@
           />
         </div>
       {:else}
-        <div class="loading-state">
+        <div class="loading-state" role="status" aria-live="polite">
           <p>Loading metrics...</p>
         </div>
       {/if}
     </ScrollSection>
-  </div>
+  </section>
 
 <!-- Steps Traveled Section -->
-<div class="section-slide">
+<section class="section-slide" aria-label="Steps traveled visualization">
   <ScrollSection 
     title="Steps Traveled"
     description="The cumulative journey of every step taken"
+    infoTooltip="Each step tells a story. This visualization traces the cumulative distance covered throughout your training period, building a path that represents your physical journey from start to finish."
   >
     {#if dataLoaded}
       <RunningTrack master={master} />
@@ -193,10 +245,10 @@
       <PlaceholderViz height="600px" label="Running Track" />
     {/if}
   </ScrollSection>
-</div>
+</section>
 
   <!-- The Ups and Downs Section -->
-  <div class="section-slide">
+  <section class="section-slide" aria-label="Training intensity waveform">
     <ScrollSection 
       title="The Ups and Downs"
       description="Daily training intensity visualized as a rhythmic waveform"
@@ -213,10 +265,10 @@
         <PlaceholderViz height="400px" label="Waveform Visualization" />
       {/if}
     </ScrollSection>
-  </div>
+  </section>
 
   <!-- Energy Expenditure Section -->
-  <div class="section-slide">
+  <section class="section-slide" aria-label="Energy expenditure visualization">
     <ScrollSection 
       title="Energy Expenditure"
       description="Living heartbeat of your fitness journey"
@@ -226,22 +278,22 @@
       {#if dataLoaded}
         <HeartVisualization sportRecords={rawSportRecords} />
       {:else}
-        <div class="loading-state">Loading visualization...</div>
+        <div class="loading-state" role="status" aria-live="polite">Loading visualization...</div>
       {/if}
     </ScrollSection>
-  </div>
+  </section>
 
   <!-- Activity Breakdown Section -->
-  <div class="section-slide">
+  <section class="section-slide" aria-label="Activity breakdown by sport type">
     {#if dataLoaded}
       <ActivityBreakdown sportData={sportData} />
     {:else}
       <PlaceholderViz height="600px" label="Activity Breakdown" />
     {/if}
-  </div>
+  </section>
 
   <!-- The Rhythm of Progress Section -->
-  <div class="section-slide">
+  <section class="section-slide" aria-label="Training progress over time">
     <ScrollSection 
       title="The Rhythm of Progress"
       description="How training evolved throughout the year"
@@ -257,10 +309,10 @@
         <PlaceholderViz height="450px" label="Progress Timeline" />
       {/if}
     </ScrollSection>
-  </div>
+  </section>
 
   <!-- Life Events & Training Section -->
-  <div class="section-slide">
+  <section class="section-slide" aria-label="Life events impact on training">
     <ScrollSection 
       title="Life Events & Training"
       description="The intersection of everyday life and fitness routine"
@@ -275,11 +327,11 @@
         <PlaceholderViz height="500px" label="Event Impact Analysis" />
       {/if}
     </ScrollSection>
-  </div>
+  </section>
 </div>
 
 <!-- Footer -->
-<footer class="footer">
+<footer class="footer" role="contentinfo">
   <div class="footer-content">
     <p class="footer-text">Data source: Mi Fitness (Oct 2024 - Dec 2024)</p>
     <p class="footer-credit">Designed & Built by Phatjira Rungsakullikit</p>
@@ -291,6 +343,25 @@
     background: #0a0a0a;
     margin: 0;
     padding: 0;
+  }
+  
+  /* Skip Link for accessibility */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #35d1c5;
+    color: #0a0a0a;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-family: monospace;
+    font-weight: bold;
+    z-index: 10000;
+    border-radius: 0 0 4px 0;
+  }
+  
+  .skip-link:focus {
+    top: 0;
   }
   
   .scroll-wrapper {
@@ -306,11 +377,34 @@
     display: none;
   }
   
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-wrapper {
+      scroll-behavior: auto;
+    }
+    
+    :global(*) {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
   .section-slide {
     width: 100vw;
     min-height: 100vh;
     scroll-snap-align: start;
     scroll-snap-stop: always;
+  }
+  
+  /* Focus styles for keyboard navigation */
+  .scroll-wrapper:focus {
+    outline: 2px solid #35d1c5;
+    outline-offset: -2px;
+  }
+  
+  .scroll-wrapper:focus:not(:focus-visible) {
+    outline: none;
   }
   
   /* Metrics Grid */
