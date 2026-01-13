@@ -128,12 +128,9 @@
         };
       })
       .filter(d => {
-        // Show only categories with sufficient active days OR normal days
-        // Lower threshold (5 active days) since some events might reduce training
         return d.category === 'normal' || d.count >= 5;
       })
       .sort((a, b) => {
-        // Sort by avgMinutes descending
         return b.avgMinutes - a.avgMinutes;
       });
     
@@ -151,9 +148,9 @@
   function drawImpactChart() {
     if (!svgElement || impactData.length === 0) return;
     
-    const margin = { top: 40, right: 60, bottom: 100, left: 100 };
-    const width = Math.min(containerWidth, 1000) - margin.left - margin.right;
-    const height = 450 - margin.top - margin.bottom;
+    const margin = { top: 40, right: 40, bottom: 100, left: 100 };
+    const width = Math.min(containerWidth * 0.55, 600) - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
     
     const svg = d3.select(svgElement)
       .attr('width', width + margin.left + margin.right)
@@ -163,11 +160,9 @@
     
     svg.selectAll('*').remove();
     
-    // Add title for screen readers
     svg.append('title')
       .text('Event Impact on Training - Bar chart comparing average training minutes across different event categories');
     
-    // Add description for screen readers
     svg.append('desc')
       .text(`This chart shows how different life events affect training intensity. ${impactData.map(d => 
         `${d.label}: ${Math.round(d.avgMinutes)} minutes average across ${d.count} active days${d.change !== 0 ? `, ${d.change > 0 ? '+' : ''}${Math.round(d.change)}% compared to normal days` : ''}`
@@ -176,7 +171,6 @@
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
     
-    // Scales
     const xScale = d3.scaleBand()
       .domain(impactData.map(d => d.category))
       .range([0, width])
@@ -187,7 +181,6 @@
       .range([height, 0])
       .nice();
     
-    // Grid lines
     g.append('g')
       .attr('class', 'grid')
       .attr('aria-hidden', 'true')
@@ -202,7 +195,6 @@
       .attr('stroke', 'rgba(255, 255, 255, 0.05)')
       .attr('stroke-width', 1);
     
-    // Bars
     const bars = g.selectAll('.bar')
       .data(impactData)
       .enter()
@@ -217,7 +209,6 @@
       .attr('fill', d => d.color)
       .attr('rx', 4);
     
-    // Animate bars
     bars.transition()
       .delay((d, i) => i * 150)
       .duration(800)
@@ -225,7 +216,6 @@
       .attr('y', d => yScale(d.avgMinutes))
       .attr('height', d => height - yScale(d.avgMinutes));
     
-    // Value labels on bars
     g.selectAll('.value-label')
       .data(impactData)
       .enter()
@@ -246,7 +236,6 @@
       .attr('y', d => yScale(d.avgMinutes) - 10)
       .style('opacity', 1);
     
-    // Day count labels on bars
     g.selectAll('.count-label')
       .data(impactData)
       .enter()
@@ -266,17 +255,15 @@
       .attr('y', d => yScale(d.avgMinutes) - 28)
       .style('opacity', 1);
     
-    // Change indicators (above bars)
     impactData.forEach((d, i) => {
       if (d.category === 'normal') return;
       
       const x = xScale(d.category) + xScale.bandwidth() / 2;
-      const y = yScale(d.avgMinutes) - 50;
+      const y = yScale(d.avgMinutes) - 55;
       
       const changeGroup = g.append('g')
         .attr('transform', `translate(${x}, ${y})`);
       
-      // Change badge
       const isNegative = d.change < 0;
       const changeText = `${isNegative ? '' : '+'}${Math.round(d.change)}%`;
       const arrow = isNegative ? '↓' : '↑';
@@ -312,7 +299,6 @@
         .style('opacity', 1);
     });
     
-    // X Axis with icons
     const xAxis = g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', `translate(0,${height})`);
@@ -320,7 +306,6 @@
     impactData.forEach(d => {
       const x = xScale(d.category) + xScale.bandwidth() / 2;
       
-      // Icon
       xAxis.append('text')
         .attr('x', x)
         .attr('y', 25)
@@ -333,7 +318,6 @@
         .duration(400)
         .style('opacity', 1);
       
-      // Label
       xAxis.append('text')
         .attr('x', x)
         .attr('y', 55)
@@ -349,7 +333,6 @@
         .style('opacity', 1);
     });
     
-    // Y Axis
     const yAxis = d3.axisLeft(yScale)
       .ticks(6)
       .tickFormat(d => `${d}min`);
@@ -366,7 +349,6 @@
       .selectAll('line, path')
       .attr('stroke', 'rgba(255, 255, 255, 0.2)');
     
-    // Y Axis label
     g.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2)
@@ -378,7 +360,6 @@
       .style('letter-spacing', '1px')
       .text('AVG TRAINING');
     
-    // Title
     svg.append('text')
       .attr('x', margin.left)
       .attr('y', 25)
@@ -388,53 +369,11 @@
       .style('fill', 'rgba(255, 255, 255, 0.7)')
       .style('letter-spacing', '1px')
       .text('EVENT IMPACT ON TRAINING');
-    
-    // Subtitle note
-    svg.append('text')
-      .attr('x', margin.left)
-      .attr('y', height + margin.top + margin.bottom - 10)
-      .style('font-family', 'monospace')
-      .style('font-size', '10px')
-      .style('fill', 'rgba(255, 255, 255, 0.4)')
-      .style('font-style', 'italic')
   }
 </script>
 
 <div class="impact-container">
   <svg bind:this={svgElement}></svg>
-  
-  <div class="stats-summary" role="list" aria-label="Detailed statistics for each event category">
-    {#each impactData as item}
-      <div 
-        class="stat-card" 
-        style="border-color: {item.color}"
-        role="listitem"
-        aria-label="{item.label} statistics"
-        tabindex="0"
-      >
-        <div class="stat-icon" aria-hidden="true">{item.icon}</div>
-        <div class="stat-content">
-          <div class="stat-label">{item.label}</div>
-          <div class="stat-value" aria-label="{Math.round(item.avgMinutes)} minutes per day">{Math.round(item.avgMinutes)} min/day</div>
-          <div class="stat-count" aria-label="{item.count} active days">{item.count} active days</div>
-          {#if item.category !== 'normal' && item.totalDays !== item.count}
-            <div class="stat-active-rate" aria-label="{Math.round(item.count / item.totalDays * 100)} percent active rate">{Math.round(item.count / item.totalDays * 100)}% active</div>
-          {/if}
-          {#if item.category !== 'normal'}
-            <div 
-              class="stat-change" 
-              class:negative={item.change < 0}
-              aria-label="{item.change > 0 ? 'plus' : 'minus'} {Math.abs(Math.round(item.change))} percent {item.change > 0 ? 'increase' : 'decrease'} compared to normal days"
-            >
-              {item.change > 0 ? '+' : ''}{Math.round(item.change)}% {item.change < 0 ? '↓' : '↑'}
-            </div>
-          {:else}
-            <div class="stat-baseline" aria-label="baseline reference">baseline</div>
-          {/if}
-        </div>
-      </div>
-    {/each}
-  </div>
 </div>
 
 <style>
@@ -444,128 +383,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    gap: 40px;
+    justify-content: center;
   }
   
   .impact-container svg {
     display: block;
   }
   
-  .stats-summary {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-    justify-content: center;
-    max-width: 1000px;
-  }
-  
-  .stat-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid;
-    border-radius: 12px;
-    min-width: 200px;
-    transition: all 0.3s ease;
-  }
-  
-  .stat-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
-  }
-  
-  /* Keyboard focus styles */
-  .stat-card:focus {
-    outline: 2px solid #35d1c5;
-    outline-offset: 2px;
-    background: rgba(255, 255, 255, 0.05);
-  }
-  
-  .stat-card:focus:not(:focus-visible) {
-    outline: none;
-  }
-  
-  /* Respect reduced motion preference */
-  @media (prefers-reduced-motion: reduce) {
-    .stat-card {
-      transition: none;
-    }
-    
-    .stat-card:hover {
-      transform: none;
-    }
-  }
-  
-  .stat-icon {
-    font-size: 36px;
-    line-height: 1;
-  }
-  
-  .stat-content {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .stat-label {
-    font-family: monospace;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.5);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .stat-value {
-    font-family: monospace;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #35d1c5;
-  }
-  
-  .stat-count {
-    font-family: monospace;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.4);
-  }
-  
-  .stat-active-rate {
-    font-family: monospace;
-    font-size: 0.65rem;
-    color: rgba(53, 209, 197, 0.5);
-    font-style: italic;
-  }
-  
-  .stat-change {
-    font-family: monospace;
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #35d1c5;
-    margin-top: 4px;
-  }
-  
-  .stat-change.negative {
-    color: #ff7a5c;
-  }
-  
-  .stat-baseline {
-    font-family: monospace;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.4);
-    font-style: italic;
-    margin-top: 4px;
-  }
-  
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    .stat-card {
-      border-width: 2px;
-    }
-    
-    .stat-card:focus {
-      outline-width: 3px;
+  @media (max-width: 768px) {
+    .impact-container {
+      padding: 20px 10px;
     }
   }
 </style>
