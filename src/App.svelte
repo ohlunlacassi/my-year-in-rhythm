@@ -204,6 +204,7 @@
     <ScrollSection 
       title="Pulse & Pause"
       description="The year's performance summarized in key metrics"
+      dark={true}
       infoTooltip="Your fitness journey distilled into three core metrics: total training hours accumulated, days you stayed active, and rest days taken. Together they paint the rhythm of your year."
     >
       {#if dataLoaded}
@@ -237,6 +238,7 @@
   <ScrollSection 
     title="Steps Traveled"
     description="The cumulative journey of every step taken"
+    dark={true}
     infoTooltip="Each step tells a story. This visualization traces the cumulative distance covered throughout your training period, building a path that represents your physical journey from start to finish."
   >
     {#if dataLoaded}
@@ -316,6 +318,7 @@
     <ScrollSection 
       title="Life Events & Training"
       description="The intersection of everyday life and fitness routine"
+      dark={true}
       infoTooltip="Averages calculated from active days only (training > 0 min). Showing categories with 5+ active days for statistical significance."
     >
       {#if dataLoaded}
@@ -329,6 +332,14 @@
     </ScrollSection>
   </section>
 </div>
+
+<!-- Footer -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-content">
+    <p class="footer-text">Data source: Mi Fitness (Oct 2024 - Dec 2024)</p>
+    <p class="footer-credit">Designed & Built by Phatjira Rungsakullikit</p>
+  </div>
+</footer>
 
 <style>
   :global(body) {
@@ -387,6 +398,7 @@
     min-height: 100vh;
     scroll-snap-align: start;
     scroll-snap-stop: always;
+    background: #0a0a0a; /* Consistent dark background for all sections */
   }
   
   /* Focus styles for keyboard navigation */
