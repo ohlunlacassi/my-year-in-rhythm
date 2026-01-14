@@ -11,6 +11,7 @@
   import ActivityBreakdown from './components/ActivityBreakdown.svelte';
   import ProgressMilestones from './components/ProgressMilestones.svelte';
   import EventImpactAnalysis from './components/EventImpactAnalysis.svelte';
+  import Conclusion from './components/Conclusion.svelte';  
   
   import { loadData } from './utils/dataLoader.js';
   import { wrangleData } from './utils/dataWrangler.js';
@@ -20,13 +21,15 @@
   let scrollContainer;
   let prefersReducedMotion = false;
   
-  const totalSections = 8;
+  const totalSections = 9;
   
   let metrics = {
     totalTrainingHours: 0,
     activeDays: 0,
     pauseDays: 0
   };
+
+  let totalSteps = 0; 
   
   let master = [];
   let rawSportRecords = [];
@@ -94,9 +97,12 @@
         activeDays: calculatedMetrics.activeDays,
         pauseDays: calculatedMetrics.pauseDays
       };
+
+      totalSteps = master.reduce((sum, d) => sum + (d.steps || 0), 0);
       
       dataLoaded = true;
       console.log('✅ Final metrics:', metrics);
+      console.log('📊 Total steps:', totalSteps.toLocaleString());
       
       // Process sport data for legend
       if (rawSportRecords.length > 0) {
@@ -192,7 +198,6 @@
   role="main"
   id="main-content"
   aria-label="Fitness data story sections"
-  tabindex="0"
 >
   <!-- Landing Page -->
   <section class="section-slide" aria-label="Landing page">
@@ -205,7 +210,7 @@
       title="Pulse & Pause"
       description="The year's performance summarized in key metrics"
       dark={true}
-      infoTooltip="Your fitness journey distilled into three core metrics: total training hours accumulated, days you stayed active, and rest days taken. Together they paint the rhythm of your year."
+      infoTooltip="My fitness journey distilled into three core metrics: total training hours accumulated, days I stayed active, and rest days taken. Together they paint the rhythm of my year."
     >
       {#if dataLoaded}
         <div class="metrics-grid" role="list" aria-label="Key fitness metrics">
@@ -233,21 +238,21 @@
     </ScrollSection>
   </section>
 
-<!-- Steps Traveled Section -->
-<section class="section-slide" aria-label="Steps traveled visualization">
-  <ScrollSection 
-    title="Steps Traveled"
-    description="The cumulative journey of every step taken"
-    dark={true}
-    infoTooltip="Each step tells a story. This visualization traces the cumulative distance covered throughout your training period, building a path that represents your physical journey from start to finish."
-  >
-    {#if dataLoaded}
-      <RunningTrack master={master} />
-    {:else}
-      <PlaceholderViz height="600px" label="Running Track" />
-    {/if}
-  </ScrollSection>
-</section>
+  <!-- Steps Traveled Section -->
+  <section class="section-slide" aria-label="Steps traveled visualization">
+    <ScrollSection 
+      title="Steps Traveled"
+      description="The cumulative journey of every step taken"
+      dark={true}
+      infoTooltip="Cumulative step tracker with running track visualization. Shows total steps taken throughout the year and converts them to kilometers. The animated runner progresses around the track to represent your journey."
+    >
+      {#if dataLoaded}
+        <RunningTrack master={master} />
+      {:else}
+        <PlaceholderViz height="600px" label="Running Track" />
+      {/if}
+    </ScrollSection>
+  </section>
 
   <!-- The Ups and Downs Section -->
   <section class="section-slide" aria-label="Training intensity waveform">
@@ -255,7 +260,7 @@
       title="The Ups and Downs"
       description="Daily training intensity visualized as a rhythmic waveform"
       dark={true}
-      infoTooltip="Weekly training intensity shown as ECG-style heartbeats. Higher spikes = more training that week. Rest periods are annotated with calendar events."
+      infoTooltip="Weekly training intensity shown as ECG-style heartbeats. Higher spikes = more training that week. Flat periods (no spikes) indicate rest weeks—labels show which life events occurred during those breaks (health appointments, study periods, holidays, etc.), explaining why training was paused."
     >
       {#if dataLoaded}
         <Waveform 
@@ -273,9 +278,9 @@
   <section class="section-slide" aria-label="Energy expenditure visualization">
     <ScrollSection 
       title="Energy Expenditure"
-      description="Living heartbeat of your fitness journey"
+      description="Living heartbeat of my fitness journey"
       dark={true}
-      infoTooltip="Total calories burned across all activities. Each pulse ring represents energy from different sports, radiating from the heart center."
+      infoTooltip="Total calories burned across all activities. Each colored dot represents energy from different sports, radiating outward from the heart center like a burst of activity."
     >
       {#if dataLoaded}
         <HeartVisualization sportRecords={rawSportRecords} />
@@ -300,7 +305,7 @@
       title="The Rhythm of Progress"
       description="How training evolved throughout the year"
       dark={true}
-      infoTooltip="Cumulative training hours over time, with milestone markers showing key achievements throughout your fitness journey."
+      infoTooltip="Cumulative training hours over the year. Milestones at every 50 hours show progress checkpoints. The time gap between consecutive milestones reveals my training pace during that period—shorter gaps mean higher weekly hours, longer gaps indicate lighter training phases."
     >
       {#if dataLoaded}
         <ProgressMilestones 
@@ -316,10 +321,10 @@
   <!-- Life Events & Training Section -->
   <section class="section-slide" aria-label="Life events impact on training">
     <ScrollSection 
-      title="Life Events & Training"
-      description="The intersection of everyday life and fitness routine"
+      title="Life events impact on training"
+      description="Average training minutes on event days despite busy schedules vs. normal routine"
       dark={true}
-      infoTooltip="Averages calculated from active days only (training > 0 min). Showing categories with 5+ active days for statistical significance."
+      infoTooltip="Compares average training minutes on days with specific events versus normal days (baseline). Only active days (training > 0 min) are included. Categories need 5+ active days for statistical reliability. Percentage shows change from baseline: +6% means 6% more training on those event days."
     >
       {#if dataLoaded}
         <EventImpactAnalysis 
@@ -331,6 +336,24 @@
       {/if}
     </ScrollSection>
   </section>
+
+  <!-- Conclusion Section -->
+<section class="section-slide" aria-label="Conclusion and insights">
+  {#if dataLoaded}
+    <Conclusion 
+      metrics={{
+        totalSteps,
+        activeDays: metrics.activeDays,
+        pauseDays: metrics.pauseDays,
+        totalTrainingHours: metrics.totalTrainingHours
+      }}
+      master={master}
+    />
+  {:else}
+    <PlaceholderViz height="600px" label="Conclusion" />
+  {/if}
+</section>
+
 </div>
 
 <style>
