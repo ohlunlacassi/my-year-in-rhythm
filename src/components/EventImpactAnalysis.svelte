@@ -14,42 +14,32 @@
   const categoryConfig = {
     health: {
       label: 'Health Appointments',
-      icon: '🏥',
+      iconPath: '/icons/hospital.png',
       color: '#9d4edd'
     },
     study: {
       label: 'Study Events',
-      icon: '📚',
+      iconPath: '/icons/homework.png',
       color: '#35d1c5'
     },
     holiday: {
       label: 'Holidays',
-      icon: '🏖️',
+      iconPath: '/icons/holiday.png',
       color: '#ff7a5c'
     },
     travel: {
       label: 'Travel',
-      icon: '✈️',
+      iconPath: '/icons/travel.png',
       color: '#ffd60a'
     },
     training: {
       label: 'Training Events',
-      icon: '💪',
+      iconPath: '/icons/muscles.png',
       color: '#06ffa5'
-    },
-    reminder: {
-      label: 'Reminders',
-      icon: '⏰',
-      color: '#f72585'
-    },
-    personal: {
-      label: 'Personal',
-      icon: '👤',
-      color: '#4cc9f0'
     },
     normal: {
       label: 'Normal Days',
-      icon: '🏠',
+      iconPath: '/icons/home.png',
       color: 'rgba(255, 255, 255, 0.3)'
     }
   };
@@ -335,13 +325,13 @@
     impactData.forEach(d => {
       const x = xScale(d.category) + xScale.bandwidth() / 2;
       
-      xAxis.append('text')
-        .attr('x', x)
-        .attr('y', 25)
-        .attr('text-anchor', 'middle')
-        .style('font-size', '28px')
+      xAxis.append('image')
+        .attr('xlink:href', d.iconPath)
+        .attr('x', x - 14)
+        .attr('y', 10)
+        .attr('width', 28)
+        .attr('height', 28)
         .style('opacity', 0)
-        .text(d.icon)
         .transition()
         .delay(impactData.indexOf(d) * 150)
         .duration(400)

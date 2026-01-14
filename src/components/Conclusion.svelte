@@ -57,17 +57,17 @@
       
       <div class="insights-grid">
         <div class="insight-card">
-          <span class="insight-icon">📈</span>
+          <img src="/icons/bar-chart.png" alt="Chart icon" class="insight-icon-img" />
           <p class="insight-text">Maintained {activePercentage}% activity rate across {totalDays} days over 15 months</p>
         </div>
         
         <div class="insight-card">
-          <span class="insight-icon">💪</span>
+          <img src="/icons/muscles.png" alt="Muscle icon" class="insight-icon-img" />
           <p class="insight-text">Averaged {avgHoursPerMonth} training hours per month—consistency over time!</p>
         </div>
         
         <div class="insight-card">
-          <span class="insight-icon">🎯</span>
+          <img src="/icons/target.png" alt="Target icon" class="insight-icon-img" />
           <p class="insight-text">Peak streak: {longestStreak} consecutive days of unbroken momentum</p>
         </div>
       </div>
@@ -191,8 +191,11 @@
     align-items: flex-start;
   }
   
-  .insight-icon {
-    font-size: 24px;
+  .insight-icon-img {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    object-fit: contain;
   }
   
   .insight-text {
