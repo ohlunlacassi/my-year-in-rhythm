@@ -143,9 +143,6 @@
   on:navigate={handleProgressBarClick}
 />
 
-<!-- Skip to content link for keyboard users -->
-<a href="#main-content" class="skip-link">Skip to main content</a>
-
 <div 
   class="scroll-wrapper" 
   bind:this={scrollContainer}

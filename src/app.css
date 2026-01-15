@@ -17,10 +17,42 @@
   height: 0;
 }
 
-/* Remove all focus outlines */
+/* Remove all focus outlines, borders, and shadows */
 *:focus,
-*:focus-visible {
+*:focus-visible,
+*:focus-within {
   outline: none !important;
+  box-shadow: none !important;
+  border-color: inherit !important;
+}
+
+/* Also target common interactive elements */
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible,
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: inherit !important;
+}
+
+/* SVG and Canvas elements */
+svg:focus,
+svg:focus-visible,
+canvas:focus,
+canvas:focus-visible,
+svg *:focus,
+svg *:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 html {
@@ -91,25 +123,6 @@ p {
 ::selection {
   background: rgba(53, 209, 197, 0.3);
   color: #e8e8e8;
-}
-
-/* === Skip Link (Accessibility) === */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: #35d1c5;
-  color: #0a0a0a;
-  padding: 8px 16px;
-  text-decoration: none;
-  font-family: monospace;
-  font-weight: bold;
-  z-index: 10000;
-  border-radius: 0 0 4px 0;
-}
-
-.skip-link:focus {
-  top: 0;
 }
 
 /* === Reduced Motion === */
