@@ -9,7 +9,7 @@
   
   const totalDays = master.length;
   const activePercentage = ((metrics.activeDays / totalDays) * 100).toFixed(0);
-  const totalMonths = 15; // Oct 2024 - Dec 2025
+  const totalMonths = 15;
   
   // Longest streak
   function calculateLongestStreak(data) {
