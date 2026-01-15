@@ -443,6 +443,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     scroll-snap-type: y mandatory;
+    overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -491,6 +492,16 @@
   .conclusion-hero-section,
   .conclusion-insights-section {
     background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%);
+    overflow-y: hidden !important;
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+    overscroll-behavior: contain;
+  }
+  
+  /* Last section - hard stop */
+  .conclusion-insights-section {
+    overscroll-behavior-y: none;
   }
   
   .conclusion-container {

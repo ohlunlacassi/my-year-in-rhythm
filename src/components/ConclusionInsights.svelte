@@ -73,71 +73,85 @@
   {/if}
 </div>
 
-<!-- Key Insights -->
-<section 
-  class="insights-section"
-  aria-labelledby="insights-title"
->
-  <h2 id="insights-title" class="section-title">
-    Journey Highlights
-  </h2>
-  
-  <div 
-    class="insights-grid" 
-    role="list"
-    aria-label="Key performance insights"
+<div class="conclusion-insights-wrapper">
+  <!-- Key Insights -->
+  <section 
+    class="insights-section"
+    aria-labelledby="insights-title"
   >
-    {#each insights as insight, i}
-      <article 
-        class="insight-card"
-        role="listitem"
-        tabindex="0"
-        aria-label="{insight.label}: {insight.metric}. {insight.text}"
-      >
-        <img 
-          src={insight.icon} 
-          alt={insight.iconAlt}
-          class="insight-icon-img"
-          aria-hidden="true"
-        />
-        <div class="insight-content">
-          <p class="insight-text">{insight.text}</p>
-          <!-- Hidden metric for screen readers -->
-          <span class="sr-only">Metric: {insight.metric}</span>
-        </div>
-      </article>
-    {/each}
-  </div>
-</section>
-
-<!-- Closing Message -->
-<footer 
-  class="closing"
-  role="contentinfo"
-  aria-label="Closing message and call to action"
->
-  <div class="quote">
-    <p class="quote-text">
-      "From October 2024 to December 2025—every step, every rep, every choice mattered. This is what sustained effort looks like."
-    </p>
-  </div>
-  
-  <div class="signature">
-    <p class="signature-text">The rhythm continues into 2026.</p>
+    <h2 id="insights-title" class="section-title">
+      Journey Highlights
+    </h2>
+    
     <div 
-      class="cta"
-      role="status"
-      aria-label="Call to action: Onward"
+      class="insights-grid" 
+      role="list"
+      aria-label="Key performance insights"
     >
-      Onward →
+      {#each insights as insight, i}
+        <article 
+          class="insight-card"
+          role="listitem"
+          tabindex="0"
+          aria-label="{insight.label}: {insight.metric}. {insight.text}"
+        >
+          <img 
+            src={insight.icon} 
+            alt={insight.iconAlt}
+            class="insight-icon-img"
+            aria-hidden="true"
+          />
+          <div class="insight-content">
+            <p class="insight-text">{insight.text}</p>
+            <!-- Hidden metric for screen readers -->
+            <span class="sr-only">Metric: {insight.metric}</span>
+          </div>
+        </article>
+      {/each}
     </div>
-  </div>
-</footer>
+  </section>
+
+  <!-- Closing Message -->
+  <footer 
+    class="closing"
+    role="contentinfo"
+    aria-label="Closing message and call to action"
+  >
+    <div class="quote">
+      <p class="quote-text">
+        "From October 2024 to December 2025—every step, every rep, every choice mattered. This is what sustained effort looks like."
+      </p>
+    </div>
+    
+    <div class="signature">
+      <p class="signature-text">The rhythm continues into 2026.</p>
+      <div 
+        class="cta"
+        role="status"
+        aria-label="Call to action: Onward"
+      >
+        Onward →
+      </div>
+    </div>
+  </footer>
+</div>
 
 <style>
+  /* Wrapper to contain both sections */
+  .conclusion-insights-wrapper {
+    height: 100%;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 24px;
+    overflow: hidden;
+  }
+  
   /* Insights Section */
   .insights-section {
-    margin-bottom: 80px;
+    margin-bottom: 60px;
+    flex-shrink: 0;
   }
   
   .section-title {
@@ -145,7 +159,7 @@
     font-size: 2rem;
     font-weight: 300;
     color: #ffffff;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
   
   .insights-grid {
@@ -206,10 +220,11 @@
     text-align: center;
     max-width: 700px;
     margin: 0 auto;
+    flex-shrink: 0;
   }
   
   .quote {
-    margin-bottom: 40px;
+    margin-bottom: 24px;
   }
   
   .quote-text {
