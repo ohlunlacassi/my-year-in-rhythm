@@ -94,9 +94,7 @@
   }
   
   .progress-bar:focus {
-    outline: 2px solid #35d1c5;
-    outline-offset: 4px;
-    height: 4px;
+    outline: none;
   }
   
   .progress-bar:focus:not(:focus-visible) {
