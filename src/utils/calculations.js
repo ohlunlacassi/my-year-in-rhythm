@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { sportPatterns } from "./sportConfig.js";
 
 const STEP_LENGTH_KM = 0.00075;
 
@@ -18,4 +19,29 @@ export function calculateMetrics(master) {
     activeDays,
     pauseDays,
   };
+}
+
+export function processSportData(sportRecords) {
+  if (!sportRecords || sportRecords.length === 0) return [];
+
+  const sportTotals = {};
+  sportRecords.forEach((record) => {
+    const sport = record.key;
+    const calories = record.calories || 0;
+    if (!sportTotals[sport]) {
+      sportTotals[sport] = 0;
+    }
+    sportTotals[sport] += calories;
+  });
+
+  return Object.entries(sportTotals)
+    .map(([sport, calories]) => ({
+      sport,
+      calories: Math.round(calories),
+      caloriesK: (calories / 1000).toFixed(1),
+      color: sportPatterns[sport]?.color || "#35d1c5",
+      label: sportPatterns[sport]?.label || sport.replace(/_/g, " "),
+    }))
+    .filter((d) => d.calories > 0 && d.sport !== "rope_skipping")
+    .sort((a, b) => b.calories - a.calories);
 }

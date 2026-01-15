@@ -16,7 +16,8 @@
   
   import { loadData } from './utils/dataLoader.js';
   import { wrangleData } from './utils/dataWrangler.js';
-  import { calculateMetrics } from './utils/calculations.js';
+  import { calculateMetrics, processSportData } from './utils/calculations.js';
+  import { sportPatterns } from './utils/sportConfig';
   
   let currentSection = 0;
   let scrollContainer;
@@ -38,27 +39,6 @@
   let dataLoaded = false;
   let selectedSport = null;
   let sportData = [];
-  
-  const sportPatterns = {
-    'outdoor_running': { color: '#35d1c5', label: 'Running' },
-    'outdoor_walking': { color: '#00d4ff', label: 'Walking' },
-    'aerobics': { color: '#ff0080', label: 'Aerobics' },
-    'mixed_aerobics': { color: '#ff3399', label: 'Mixed Aerobics' },
-    'yoga': { color: '#9d4edd', label: 'Yoga' },
-    'free_training': { color: '#06ffa5', label: 'Free Training' },
-    'upper_limb_training': { color: '#ffbe0b', label: 'Upper Body' },
-    'lower_limb_training': { color: '#fb5607', label: 'Lower Body' },
-    'core_training': { color: '#ff006e', label: 'Core' },
-    'physical_training': { color: '#8338ec', label: 'Physical' },
-    'pilates': { color: '#c77dff', label: 'Pilates' },
-    'flexibility_training': { color: '#e0aaff', label: 'Flexibility' },
-    'indoor_walking': { color: '#48cae4', label: 'Indoor Walking' },
-    'indoor_riding': { color: '#0096c7', label: 'Indoor Cycling' },
-    'weight_lifting': { color: '#ff9500', label: 'Weight Lifting' },
-    'waist_training': { color: '#ff6b6b', label: 'Waist' },
-    'back_training': { color: '#ffd166', label: 'Back' },
-    'high_interval_training': { color: '#ef233c', label: 'HIIT' },
-  };
   
   onMount(async () => {
     try {
@@ -92,31 +72,11 @@
 
       totalSteps = master.reduce((sum, d) => sum + (d.steps || 0), 0);
       
+      // Process sport data for ActivityBreakdown
+      sportData = processSportData(rawSportRecords);
+      console.log('🎯 Sport Data processed:', sportData);
+      
       dataLoaded = true;
-
-      // Process sport data for legend
-      if (rawSportRecords.length > 0) {
-        const sportTotals = {};
-        rawSportRecords.forEach(record => {
-          const sport = record.key;
-          const calories = record.calories || 0;
-          if (!sportTotals[sport]) {
-            sportTotals[sport] = 0;
-          }
-          sportTotals[sport] += calories;
-        });
-        
-        sportData = Object.entries(sportTotals)
-          .map(([sport, calories]) => ({
-            sport,
-            calories: Math.round(calories),
-            caloriesK: (calories / 1000).toFixed(1),
-            color: sportPatterns[sport]?.color || '#35d1c5',
-            label: sportPatterns[sport]?.label || sport.replace(/_/g, ' ')
-          }))
-          .filter(d => d.calories > 0 && d.sport !== 'rope_skipping')
-          .sort((a, b) => b.calories - a.calories);
-      }
       
     } catch (error) {
       console.error('❌ Error loading data:', error);
@@ -128,20 +88,20 @@
     
     // Keyboard navigation
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-        e.preventDefault();
-        navigateToSection(currentSection + 1);
-      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-        e.preventDefault();
-        navigateToSection(currentSection - 1);
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        navigateToSection(0);
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        navigateToSection(totalSections - 1);
-      }
-    };
+  if (e.key === ' ' || e.key === 'ArrowDown' || e.key === 'PageDown') {
+    e.preventDefault();
+    navigateToSection(currentSection + 1);
+  } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault();
+    navigateToSection(currentSection - 1);
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    navigateToSection(0);
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    navigateToSection(totalSections - 1);
+  }
+};
     
     document.addEventListener('keydown', handleKeyDown);
     
