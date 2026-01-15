@@ -15,7 +15,7 @@
   
   // Helper function for date formatting
   function formatDate(date) {
-    return d3.timeFormat('%b %Y')(date);
+    return d3.timeFormat("%b'%y")(date);
   }
   
   onMount(() => {
@@ -404,22 +404,22 @@
       if (i > 0) {
         // Add pace icon
         const paceIcons = {
-          fast: null,  // Use emoji ⚡
-          normal: null,  // Use emoji ✓
-          slow: '/icons/snail.png'  // Use icon for snail
+          fast: null,
+          normal: null,
+          slow: '/icons/snail.png'
         };
         
         const paceTexts = {
           fast: '⚡ FAST',
           normal: '✓ NORMAL',
-          slow: 'SLOWER'  // No emoji, just text
+          slow: 'SLOWER'
         };
         
         // For slow pace, add icon separately
         if (milestone.pace === 'slow' && paceIcons[milestone.pace]) {
           milestoneGroup.append('image')
             .attr('xlink:href', paceIcons[milestone.pace])
-            .attr('x', x - 30)  // Left of text
+            .attr('x', x - 30)
             .attr('y', y + 30)
             .attr('width', 16)
             .attr('height', 16)
@@ -432,7 +432,7 @@
         }
         
         milestoneGroup.append('text')
-          .attr('x', milestone.pace === 'slow' ? x - 8 : x)  // Shift right if icon present
+          .attr('x', milestone.pace === 'slow' ? x - 8 : x)
           .attr('y', y + 40)
           .attr('text-anchor', milestone.pace === 'slow' ? 'start' : 'middle')
           .style('font-family', 'monospace')
