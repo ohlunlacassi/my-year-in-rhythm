@@ -476,30 +476,35 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
     let isKeyboardFocus = false;
     
     const overlay = g.append('rect')
-      .attr('class', 'overlay')
-      .attr('width', width)
-      .attr('height', height - margin.top - margin.bottom)
-      .attr('opacity', 0)
-      .attr('role', 'application')
-      .attr('aria-label', 'Interactive chart area - hover to see weekly details')
-      .attr('tabindex', '0')
-      .on('mousemove', handleMouseMove)
-      .on('mouseleave', hideTooltip)
-      .on('mousedown', function() {
-        isKeyboardFocus = false;
-      })
-      .on('keydown', function() {
-        isKeyboardFocus = true;
-      })
-      .on('focus', function() {
-        if (isKeyboardFocus) {
-          d3.select(this).style('outline', '2px solid #35d1c5');
-        }
-      })
-      .on('blur', function() {
-        d3.select(this).style('outline', 'none');
-        hideTooltip();
-      });
+  .attr('class', 'overlay')
+  .attr('width', width)
+  .attr('height', height - margin.top - margin.bottom)
+  .attr('opacity', 0)
+  .attr('role', 'application')
+  .attr('aria-label', 'Interactive chart area - hover to see weekly details')
+  .attr('tabindex', '0')
+  .on('mousemove', handleMouseMove)
+  .on('mouseleave', hideTooltip)
+  .on('mousedown', function(event) {
+    isKeyboardFocus = false;
+    event.preventDefault();
+    d3.select(this).node().blur();
+  })
+  .on('keydown', function() {
+    isKeyboardFocus = true;
+  })
+  .on('focus', function() {
+    if (isKeyboardFocus) {
+      d3.select(this).style('outline', '2px solid #35d1c5');
+    } else {
+      d3.select(this).style('outline', 'none');
+    }
+  })
+  .on('blur', function() {
+    d3.select(this).style('outline', 'none');
+    hideTooltip();
+  });
+
     
     function handleMouseMove(event) {
       const [mouseX] = d3.pointer(event);
@@ -594,6 +599,8 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
     height: 100%;
     min-height: 450px;
     background: #000000;
+    overflow: hidden;
+    touch-action: none;
   }
   
   .waveform-container svg {
