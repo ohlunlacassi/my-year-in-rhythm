@@ -127,6 +127,8 @@
 <style>
   .scroll-section {
     min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
@@ -217,6 +219,7 @@
     flex-direction: column;
     position: relative;
     z-index: 1;
+    overflow-x: hidden;
   }
   
   .section-header {
@@ -267,9 +270,11 @@
   
   .section-content {
     width: 100%;
+    max-width: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
   }
   
   /* Screen reader only content */

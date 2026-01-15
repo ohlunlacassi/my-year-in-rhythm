@@ -372,6 +372,14 @@
 <style>
   :global(html) {
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    scrollbar-width: none;
+  }
+  
+  :global(html::-webkit-scrollbar) {
+    display: none;
+    width: 0;
   }
   
   :global(body) {
@@ -379,6 +387,25 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    scrollbar-width: none;
+  }
+  
+  :global(body::-webkit-scrollbar) {
+    display: none;
+    width: 0;
+  }
+  
+  /* Hide all scrollbars globally */
+  :global(*) {
+    scrollbar-width: none;
+  }
+  
+  :global(*::-webkit-scrollbar) {
+    display: none;
+    width: 0;
+    height: 0;
   }
   
   /* Skip Link for accessibility */
@@ -402,14 +429,28 @@
   
   .scroll-wrapper {
     height: 100vh;
+    width: 100%;
+    max-width: 100vw;
     overflow-y: scroll;
     overflow-x: hidden;
     scroll-snap-type: y mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    -ms-overflow-style: none;
   }
   
   .scroll-wrapper::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+  
+  .scroll-wrapper::-webkit-scrollbar-thumb {
+    display: none;
+  }
+  
+  .scroll-wrapper::-webkit-scrollbar-track {
     display: none;
   }
   
@@ -427,12 +468,14 @@
   }
   
   .section-slide {
-    width: 100vw;
+    width: 100%;
+    max-width: 100vw;
     min-height: 100vh;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     background: #0a0a0a; /* Consistent dark background for all sections */
     overflow-x: hidden;
+    overflow-y: auto;
   }
   
   /* Conclusion sections styling */
@@ -451,6 +494,7 @@
     align-items: center;
     justify-content: center;
     padding: 80px 24px;
+    overflow-x: hidden;
   }
   
   /* Focus styles for keyboard navigation */
