@@ -305,7 +305,7 @@
       title="The Rhythm of Progress"
       description="How training evolved throughout the year"
       dark={true}
-      infoTooltip="Cumulative training hours over the year. Milestones at every 50 hours show progress checkpoints. The time gap between consecutive milestones reveals my training pace during that period—shorter gaps mean higher weekly hours, longer gaps indicate lighter training phases."
+      infoTooltip="Cumulative training hours over the year starting from Oct'24. Milestones at every 50 hours show progress checkpoints. The time gap between consecutive milestones reveals my training pace during that period—shorter gaps mean higher weekly hours, longer gaps indicate lighter training phases."
     >
       {#if dataLoaded}
         <ProgressMilestones 
