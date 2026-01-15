@@ -9,13 +9,39 @@
   
   let sectionElement;
   let visible = false;
+  let prefersReducedMotion = false;
+  
+  // Generate unique ID for ARIA
+  const sectionId = `section-${Math.random().toString(36).substr(2, 9)}`;
+  const titleId = `${sectionId}-title`;
+  const descId = `${sectionId}-desc`;
   
   onMount(() => {
+    // Check for reduced motion preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    prefersReducedMotion = mediaQuery.matches;
+    
+    mediaQuery.addEventListener('change', (e) => {
+      prefersReducedMotion = e.matches;
+    });
+    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             visible = true;
+            
+            // Announce to screen readers when section becomes visible
+            if (sectionElement) {
+              const liveRegion = sectionElement.querySelector('[aria-live]');
+              if (liveRegion) {
+                liveRegion.textContent = `${title} section is now visible`;
+                // Clear after announcement
+                setTimeout(() => {
+                  liveRegion.textContent = '';
+                }, 1000);
+              }
+            }
           }
         });
       },
@@ -30,35 +56,69 @@
       if (sectionElement) {
         observer.unobserve(sectionElement);
       }
+      mediaQuery.removeEventListener('change', () => {});
     };
   });
 </script>
 
+<!-- Live region for screen reader announcements -->
+<div 
+  aria-live="polite" 
+  aria-atomic="true" 
+  class="sr-only"
+></div>
+
+<!-- Skip link for this section -->
+<a href="#{sectionId}-content" class="skip-link">
+  Skip to {title || 'section'} content
+</a>
+
 <section 
   bind:this={sectionElement}
+  id={sectionId}
   class="scroll-section" 
   class:visible 
   class:dark
+  class:reduced-motion={prefersReducedMotion}
+  aria-labelledby={title ? titleId : null}
+  aria-describedby={description ? descId : null}
+  role="region"
+  tabindex="-1"
 >
-  <div class="gradient-orb"></div>
+  <div class="gradient-orb" aria-hidden="true"></div>
   
   <div class="container">
     {#if title}
-      <div class="section-header">
-        <div class="title-accent"></div>
-        <h2 class="section-title">{title}</h2>
+      <header class="section-header">
+        <div class="title-accent" aria-hidden="true"></div>
+        <h2 
+          id={titleId}
+          class="section-title"
+        >
+          {title}
+        </h2>
         {#if description}
           <div class="description-with-info">
-            <p class="section-description">{description}</p>
+            <p 
+              id={descId}
+              class="section-description"
+            >
+              {description}
+            </p>
             {#if infoTooltip}
               <InfoTooltip text={infoTooltip} />
             {/if}
           </div>
         {/if}
-      </div>
+      </header>
     {/if}
     
-    <div class="section-content">
+    <div 
+      id="{sectionId}-content"
+      class="section-content"
+      role="group"
+      aria-label="{title ? `${title} visualization` : 'Section content'}"
+    >
       <slot />
     </div>
   </div>
@@ -71,11 +131,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 80px 24px 20px; 
+    padding: 80px 24px 20px;
     background: #1a1a1a;
     opacity: 0;
     transform: translateY(40px);
-    transition: all1s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -88,6 +148,35 @@
   .scroll-section.visible {
     opacity: 1;
     transform: translateY(0);
+  }
+  
+  /* Reduced motion support */
+  .scroll-section.reduced-motion {
+    transition: opacity 0.3s ease;
+    transform: none;
+  }
+  
+  .scroll-section.reduced-motion.visible {
+    transform: none;
+  }
+  
+  .scroll-section.reduced-motion .gradient-orb {
+    animation: none;
+  }
+  
+  .scroll-section.reduced-motion .title-accent {
+    animation: none;
+    width: 60px;
+  }
+  
+  /* Focus state for keyboard navigation */
+  .scroll-section:focus {
+    outline: 2px solid #35d1c5;
+    outline-offset: -4px;
+  }
+  
+  .scroll-section:focus:not(:focus-visible) {
+    outline: none;
   }
   
   .gradient-orb {
@@ -183,13 +272,102 @@
     flex-direction: column;
   }
   
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Skip link */
+  .skip-link {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    background: #35d1c5;
+    color: #0a0a0a;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    font-family: monospace;
+    z-index: 10000;
+  }
+  
+  .skip-link:focus {
+    position: fixed;
+    left: 50%;
+    top: 80px;
+    transform: translateX(-50%);
+    width: auto;
+    height: auto;
+    overflow: visible;
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .section-title {
+      color: #ffffff;
+    }
+    
+    .section-description {
+      color: #e0e0e0;
+    }
+    
+    .title-accent {
+      background: #35d1c5;
+    }
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-section {
+      transition: opacity 0.3s ease;
+      transform: none;
+    }
+    
+    .scroll-section.visible {
+      transform: none;
+    }
+    
+    .gradient-orb {
+      animation: none;
+    }
+    
+    .title-accent {
+      animation: none;
+      width: 60px;
+    }
+    
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
   @media (max-width: 768px) {
     .scroll-section {
-      padding: 80px 20px 20px;
+      padding: 50px 20px 20px;
     }
     
     .section-header {
       margin-bottom: 30px;
+    }
+    
+    .skip-link:focus {
+      top: 60px;
+      font-size: 14px;
+      padding: 6px 12px;
     }
   }
 </style>
