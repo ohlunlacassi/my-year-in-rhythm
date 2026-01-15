@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import OrientationWarning from './components/OrientationWarning.svelte';
   import Landing from './components/Landing.svelte';
   import ScrollSection from './components/ScrollSection.svelte';
   import PlaceholderViz from './components/PlaceholderViz.svelte';
@@ -136,6 +137,9 @@
     navigateToSection(sectionIndex);
   }
 </script>
+
+<!-- Orientation Warning Overlay (for mobile/tablet portrait mode) -->
+<OrientationWarning />
 
 <ProgressBar 
   total={totalSections} 
