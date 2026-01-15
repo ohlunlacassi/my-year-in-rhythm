@@ -22,7 +22,7 @@
   let scrollContainer;
   let prefersReducedMotion = false;
   
-  const totalSections = 10;  // ← เปลี่ยนจาก 9 เป็น 10!
+  const totalSections = 10;
   
   let metrics = {
     totalTrainingHours: 0,
@@ -71,18 +71,10 @@
         prefersReducedMotion = e.matches;
       });
       
-      console.log('Starting to load data...');
-      
       const rawData = await loadData();
-      console.log('Data loaded:', rawData);
       
       rawSportRecords = rawData.sportRecords;
       rawCalendar = rawData.calendar;
-      console.log('📅 Calendar data:', rawCalendar);
-      console.log('📅 Sending to Waveform:', {
-        sportRecords: rawSportRecords.length,
-        calendar: rawCalendar.length
-      });
       
       master = wrangleData(
         rawData.fitnessDaily,
@@ -91,7 +83,6 @@
       );
       
       const calculatedMetrics = calculateMetrics(master);
-      console.log('Calculated metrics:', calculatedMetrics);
       
       metrics = {
         totalTrainingHours: Math.round(calculatedMetrics.totalTrainingHours),
@@ -102,9 +93,7 @@
       totalSteps = master.reduce((sum, d) => sum + (d.steps || 0), 0);
       
       dataLoaded = true;
-      console.log('✅ Final metrics:', metrics);
-      console.log('📊 Total steps:', totalSteps.toLocaleString());
-      
+
       // Process sport data for legend
       if (rawSportRecords.length > 0) {
         const sportTotals = {};
@@ -180,11 +169,6 @@
       top: targetSection * sectionHeight,
       behavior: prefersReducedMotion ? 'auto' : 'smooth'
     });
-  }
-  
-  function handleTrackFilter(event) {
-    selectedSport = event.detail.sport;
-    console.log('Selected sport:', selectedSport);
   }
   
   function handleProgressBarClick(event) {
