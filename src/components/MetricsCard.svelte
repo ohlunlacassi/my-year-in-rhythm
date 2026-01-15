@@ -32,30 +32,36 @@
       }
     };
   });
- function animateValue(target, duration = 8000) {
-  const startTime = performance.now();
   
-  function update(time) {
-    const progress = Math.min((time - startTime) / duration, 1);
+  function animateValue(target, duration = 8000) {
+    const startTime = performance.now();
     
-    const eased = progress === 1 ? 1 : 1 - Math.pow(2, -15 * progress);
-    
-    displayValue = Math.round(eased * target);
-    
-    if (progress < 1) {
-      requestAnimationFrame(update);
+    function update(time) {
+      const progress = Math.min((time - startTime) / duration, 1);
+      
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -15 * progress);
+      
+      displayValue = Math.round(eased * target);
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
     }
+    
+    requestAnimationFrame(update);
   }
-  
-  requestAnimationFrame(update);
-}
 </script>
 
-<div class="metric-card" bind:this={cardElement}>
+<div 
+  class="metric-card" 
+  bind:this={cardElement}
+  role="region"
+  aria-label="{title}: {value} {unit}"
+>
   <h3>{title}</h3>
   <div class="metric-value">
-    <span>{displayValue}</span>
-    <span class="unit">{unit}</span>
+    <span aria-hidden="true">{displayValue}</span>
+    <span class="unit" aria-hidden="true">{unit}</span>
   </div>
 </div>
 
@@ -80,13 +86,14 @@
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(53, 209, 197, 0.15), transparent);
     transition: left 0.6s ease;
+    pointer-events: none;
+    border-radius: 16px;
   }
   
   .metric-card:hover {
-    background: linear-gradient(135deg, rgba(53, 209, 197, 0.12) 0%, rgba(53, 209, 197, 0.04) 100%);
-    border-color: rgba(53, 209, 197, 0.5);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(53, 209, 197, 0.2);
+    background: linear-gradient(135deg, rgba(53, 209, 197, 0.15) 0%, rgba(53, 209, 197, 0.05) 100%);
+    border-color: rgba(53, 209, 197, 0.6);
+    box-shadow: 0 8px 32px rgba(53, 209, 197, 0.25);
   }
   
   .metric-card:hover::before {
@@ -105,7 +112,7 @@
   .metric-value {
     font-size: 3.5rem;
     font-weight: 300;
-    color: #35d1c5;  /* ← Bright Turquoise */
+    color: #35d1c5;
     display: flex;
     align-items: baseline;
     justify-content: center;
@@ -130,6 +137,21 @@
     
     .unit {
       font-size: 1rem;
+    }
+  }
+  
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .metric-card {
+      border-width: 2px;
+    }
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .metric-card,
+    .metric-card::before {
+      transition: none;
     }
   }
 </style>
