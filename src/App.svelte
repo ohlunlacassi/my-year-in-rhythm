@@ -323,68 +323,7 @@
 </div>
 
 <style>
-  :global(html) {
-    overflow-x: hidden;
-    width: 100%;
-    max-width: 100vw;
-    scrollbar-width: none;
-  }
-  
-  :global(html::-webkit-scrollbar) {
-    display: none;
-    width: 0;
-  }
-  
-  :global(body) {
-    background: #0a0a0a;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    width: 100%;
-    max-width: 100vw;
-    scrollbar-width: none;
-  }
-  
-  :global(body::-webkit-scrollbar) {
-    display: none;
-    width: 0;
-  }
-  
-  /* Hide all scrollbars globally */
-  :global(*) {
-    scrollbar-width: none;
-  }
-  
-  /* Remove all focus outlines */
-  :global(*:focus),
-  :global(*:focus-visible) {
-    outline: none !important;
-  }
-  
-  :global(*::-webkit-scrollbar) {
-    display: none;
-    width: 0;
-    height: 0;
-  }
-  
-  /* Skip Link for accessibility */
-  .skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: #35d1c5;
-    color: #0a0a0a;
-    padding: 8px 16px;
-    text-decoration: none;
-    font-family: monospace;
-    font-weight: bold;
-    z-index: 10000;
-    border-radius: 0 0 4px 0;
-  }
-  
-  .skip-link:focus {
-    top: 0;
-  }
+  /* Component-specific styles only */
   
   .scroll-wrapper {
     height: 100vh;
@@ -414,16 +353,10 @@
     display: none;
   }
   
-  /* Respect reduced motion preference */
+  /* Respect reduced motion preference for scroll-wrapper only */
   @media (prefers-reduced-motion: reduce) {
     .scroll-wrapper {
       scroll-behavior: auto;
-    }
-    
-    :global(*) {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
     }
   }
   
