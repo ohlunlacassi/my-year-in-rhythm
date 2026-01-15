@@ -3,19 +3,26 @@
   export let label = 'Visualization';
 </script>
 
-<div class="placeholder-viz" style="height: {height}">
-  <div class="gradient-orb"></div>
-  <div class="grid-pattern"></div>
+<div 
+  class="placeholder-viz" 
+  style="height: {height}"
+  role="status"
+  aria-label="Loading {label}"
+  aria-live="polite"
+  aria-busy="true"
+>
+  <div class="gradient-orb" aria-hidden="true"></div>
+  <div class="grid-pattern" aria-hidden="true"></div>
   
   <div class="placeholder-content">
-    <div class="icon-wrapper">
+    <div class="icon-wrapper" aria-hidden="true">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <path d="M3 9h18M9 21V9" />
       </svg>
     </div>
-    <p class="placeholder-label">{label}</p>
-    <div class="loading-bar">
+    <p class="placeholder-label" aria-hidden="true">{label}</p>
+    <div class="loading-bar" aria-hidden="true">
       <div class="loading-fill"></div>
     </div>
     <p class="loading-text">Loading data...</p>
@@ -36,7 +43,6 @@
     overflow: hidden;
   }
   
-  /* Gradient Orb Background */
   .gradient-orb {
     position: absolute;
     top: -100px;
@@ -49,7 +55,6 @@
     animation: float 6s ease-in-out infinite;
   }
   
-  /* Grid Pattern */
   .grid-pattern {
     position: absolute;
     top: 0;
@@ -64,7 +69,6 @@
     pointer-events: none;
   }
   
-  /* Shimmer Effect */
   .placeholder-viz::before {
     content: '';
     position: absolute;
@@ -131,7 +135,6 @@
     letter-spacing: 0.02em;
   }
   
-  /* Loading Bar */
   .loading-bar {
     width: 200px;
     height: 3px;
@@ -176,6 +179,21 @@
     }
     50% {
       opacity: 0.6;
+    }
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .gradient-orb,
+    .icon-wrapper,
+    .loading-fill,
+    .loading-text,
+    .placeholder-viz::before {
+      animation: none;
+    }
+    
+    .placeholder-viz:hover {
+      transform: none;
     }
   }
   
