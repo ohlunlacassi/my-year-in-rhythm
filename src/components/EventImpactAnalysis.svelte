@@ -10,42 +10,62 @@
   let impactData = [];
   let visible = false;
   let hasAnimated = false;
+  let prefersReducedMotion = false;
+  let baselineMinutes = 0;
+  
+  // Helper functions for accessibility
+  function formatMinutes(minutes) {
+    return `${Math.round(minutes)}min`;
+  }
+  
+  function formatPercentage(value) {
+    return `${value >= 0 ? '+' : ''}${Math.round(value)}%`;
+  }
   
   const categoryConfig = {
     health: {
       label: 'Health Appointments',
       iconPath: '/icons/hospital.png',
-      color: '#9d4edd'
+      color: '#9d4edd',
+      shortLabel: 'Health'
     },
     study: {
       label: 'Study Events',
       iconPath: '/icons/homework.png',
-      color: '#35d1c5'
+      color: '#35d1c5',
+      shortLabel: 'Study'
     },
     holiday: {
       label: 'Holidays',
       iconPath: '/icons/holiday.png',
-      color: '#ff7a5c'
+      color: '#ff7a5c',
+      shortLabel: 'Holidays'
     },
     travel: {
       label: 'Travel',
       iconPath: '/icons/travel.png',
-      color: '#ffd60a'
+      color: '#ffd60a',
+      shortLabel: 'Travel'
     },
     training: {
       label: 'Training Events',
       iconPath: '/icons/muscles.png',
-      color: '#06ffa5'
+      color: '#06ffa5',
+      shortLabel: 'Training'
     },
     normal: {
       label: 'Normal Days',
-      iconPath: '/icons/home.png',
-      color: 'rgba(255, 255, 255, 0.3)'
+      iconPath: '/icons/shoe.png',
+      color: 'rgba(255, 255, 255, 0.3)',
+      shortLabel: 'Normal'
     }
   };
   
   onMount(() => {
     if (master.length === 0) return;
+    
+    // Check for reduced motion preference
+    prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
     containerWidth = svgElement?.parentElement?.clientWidth || 800;
     analyzeEventImpact();
@@ -58,7 +78,7 @@
           
           setTimeout(() => {
             drawLollipopChart();
-          }, 400);
+          }, prefersReducedMotion ? 0 : 400);
           
           observer.disconnect();
         }
@@ -116,6 +136,7 @@
       .map(d => d.trainingMinutes);
     
     const normalAvg = d3.mean(normalDaysTraining);
+    baselineMinutes = normalAvg;
     
     categoryStats['normal'] = {
       avgMinutes: normalAvg,
@@ -154,17 +175,24 @@
   function drawLollipopChart() {
     if (!svgElement || impactData.length === 0) return;
     
-    const margin = { top: 60, right: 80, bottom: 100, left: 120 };
-    const width = Math.min(containerWidth * 0.6, 700) - margin.left - margin.right;
+    const margin = { top: 30, right: 100, bottom: 100, left: 160 };
+    const width = Math.min(containerWidth * 0.7, 800) - margin.left - margin.right;
     const height = 450 - margin.top - margin.bottom;
     
     const svg = d3.select(svgElement)
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .attr('role', 'img')
-      .attr('aria-label', 'Lollipop chart showing event impact on training');
+      .attr('aria-label', `Lollipop chart showing event impact on training. Baseline is ${formatMinutes(baselineMinutes)}.`);
     
     svg.selectAll('*').remove();
+    
+    // Add detailed description
+    svg.append('desc')
+      .text(`Lollipop chart visualization showing average training minutes for different event types. 
+      Baseline (normal days): ${formatMinutes(baselineMinutes)}. 
+      Each category shows average minutes, number of active days, and percentage change from baseline.
+      Total of ${impactData.length} categories displayed.`);
     
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -209,8 +237,8 @@
       .attr('stroke-dasharray', '5,5')
       .style('opacity', 0)
       .transition()
-      .delay(200)
-      .duration(600)
+      .delay(prefersReducedMotion ? 0 : 200)
+      .duration(prefersReducedMotion ? 0 : 600)
       .style('opacity', 1);
     
     g.append('text')
@@ -222,51 +250,99 @@
       .text('BASELINE')
       .style('opacity', 0)
       .transition()
-      .delay(400)
-      .duration(400)
+      .delay(prefersReducedMotion ? 0 : 400)
+      .duration(prefersReducedMotion ? 0 : 400)
       .style('opacity', 1);
     
-    // Lollipop stems
-    const stems = g.selectAll('.stem')
-      .data(impactData)
-      .enter()
-      .append('line')
-      .attr('class', 'stem')
-      .attr('x1', 0)
-      .attr('x2', 0)
-      .attr('y1', d => yScale(d.category) + yScale.bandwidth() / 2)
-      .attr('y2', d => yScale(d.category) + yScale.bandwidth() / 2)
-      .attr('stroke', d => d.color)
-      .attr('stroke-width', 3)
-      .attr('stroke-linecap', 'round');
-    
-    stems.transition()
-      .delay((d, i) => i * 120)
-      .duration(800)
-      .ease(d3.easeCubicOut)
-      .attr('x2', d => xScale(d.avgMinutes));
-    
-    // Lollipop heads
-    const heads = g.selectAll('.head')
-      .data(impactData)
-      .enter()
-      .append('circle')
-      .attr('class', 'head')
-      .attr('cx', 0)
-      .attr('cy', d => yScale(d.category) + yScale.bandwidth() / 2)
-      .attr('r', 0)
-      .attr('fill', d => d.color)
-      .attr('stroke', '#0a0a0a')
-      .attr('stroke-width', 2)
-      .style('opacity', 0);
-    
-    heads.transition()
-      .delay((d, i) => i * 120 + 400)
-      .duration(600)
-      .ease(d3.easeBackOut)
-      .attr('cx', d => xScale(d.avgMinutes))
-      .attr('r', 8)
-      .style('opacity', 1);
+    // Create interactive groups for each lollipop
+    impactData.forEach((d, i) => {
+      const y = yScale(d.category) + yScale.bandwidth() / 2;
+      
+      const lollipopGroup = g.append('g')
+        .attr('class', 'lollipop-group')
+        .attr('tabindex', 0)
+        .attr('role', 'button')
+        .attr('aria-label', `${d.label}: ${formatMinutes(d.avgMinutes)}, ${d.count} active days, ${d.category === 'normal' ? 'baseline' : formatPercentage(d.change) + ' vs baseline'}`)
+        .style('cursor', 'pointer')
+        .style('outline', 'none');
+      
+      // Add title for tooltip
+      lollipopGroup.append('title')
+        .text(`${d.label}
+${formatMinutes(d.avgMinutes)} average
+${d.count} active days
+${d.category === 'normal' ? 'Baseline' : formatPercentage(d.change) + ' vs baseline'}`);
+      
+      // Stem
+      const stem = lollipopGroup.append('line')
+        .attr('class', 'stem')
+        .attr('x1', 0)
+        .attr('x2', 0)
+        .attr('y1', y)
+        .attr('y2', y)
+        .attr('stroke', d.color)
+        .attr('stroke-width', 3)
+        .attr('stroke-linecap', 'round');
+      
+      if (!prefersReducedMotion) {
+        stem.transition()
+          .delay(i * 120)
+          .duration(800)
+          .ease(d3.easeCubicOut)
+          .attr('x2', xScale(d.avgMinutes));
+      } else {
+        stem.attr('x2', xScale(d.avgMinutes));
+      }
+      
+      // Head
+      const head = lollipopGroup.append('circle')
+        .attr('class', 'head')
+        .attr('cx', 0)
+        .attr('cy', y)
+        .attr('r', 0)
+        .attr('fill', d.color)
+        .attr('stroke', '#0a0a0a')
+        .attr('stroke-width', 2)
+        .style('opacity', 0);
+      
+      if (!prefersReducedMotion) {
+        head.transition()
+          .delay(i * 120 + 400)
+          .duration(600)
+          .ease(d3.easeBackOut)
+          .attr('cx', xScale(d.avgMinutes))
+          .attr('r', 8)
+          .style('opacity', 1);
+      } else {
+        head
+          .attr('cx', xScale(d.avgMinutes))
+          .attr('r', 8)
+          .style('opacity', 1);
+      }
+      
+      // Focus state
+      lollipopGroup
+        .on('focus', function() {
+          d3.select(this).select('circle')
+            .transition()
+            .duration(200)
+            .attr('r', 12)
+            .style('filter', 'drop-shadow(0 0 8px ' + d.color + ')');
+        })
+        .on('blur', function() {
+          d3.select(this).select('circle')
+            .transition()
+            .duration(200)
+            .attr('r', 8)
+            .style('filter', 'none');
+        })
+        .on('keydown', function(event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            console.log('Category selected:', d);
+          }
+        });
+    });
     
     // Value labels
     g.selectAll('.value-label')
@@ -282,10 +358,11 @@
       .style('font-weight', 'bold')
       .style('fill', d => d.color)
       .style('opacity', 0)
-      .text(d => `${Math.round(d.avgMinutes)}min`)
+      .style('pointer-events', 'none')
+      .text(d => formatMinutes(d.avgMinutes))
       .transition()
-      .delay((d, i) => i * 120 + 600)
-      .duration(400)
+      .delay((d, i) => prefersReducedMotion ? 0 : i * 120 + 600)
+      .duration(prefersReducedMotion ? 0 : 400)
       .attr('x', d => xScale(d.avgMinutes) + 15)
       .style('opacity', 1);
     
@@ -302,10 +379,11 @@
       .style('font-size', '10px')
       .style('fill', 'rgba(255, 255, 255, 0.4)')
       .style('opacity', 0)
+      .style('pointer-events', 'none')
       .text(d => `${d.count} active`)
       .transition()
-      .delay((d, i) => i * 120 + 700)
-      .duration(400)
+      .delay((d, i) => prefersReducedMotion ? 0 : i * 120 + 700)
+      .duration(prefersReducedMotion ? 0 : 400)
       .attr('x', d => xScale(d.avgMinutes) + 15)
       .style('opacity', 1);
     
@@ -317,10 +395,11 @@
       const y = yScale(d.category) + yScale.bandwidth() / 2;
       
       const changeGroup = g.append('g')
-        .attr('transform', `translate(${x}, ${y})`);
+        .attr('transform', `translate(${x}, ${y})`)
+        .style('pointer-events', 'none');
       
       const isNegative = d.change < 0;
-      const changeText = `${isNegative ? '' : '+'}${Math.round(d.change)}%`;
+      const changeText = formatPercentage(d.change);
       const arrow = isNegative ? '↓' : '↑';
       
       changeGroup.append('rect')
@@ -334,8 +413,8 @@
         .attr('stroke-width', 1)
         .style('opacity', 0)
         .transition()
-        .delay(i * 120 + 1000)
-        .duration(400)
+        .delay(prefersReducedMotion ? 0 : i * 120 + 1000)
+        .duration(prefersReducedMotion ? 0 : 400)
         .style('opacity', 1);
       
       changeGroup.append('text')
@@ -349,42 +428,81 @@
         .style('opacity', 0)
         .text(`${changeText} ${arrow}`)
         .transition()
-        .delay(i * 120 + 1000)
-        .duration(400)
+        .delay(prefersReducedMotion ? 0 : i * 120 + 1000)
+        .duration(prefersReducedMotion ? 0 : 400)
         .style('opacity', 1);
     });
     
-    // Y-axis labels
+    // Y-axis labels with better text handling
     impactData.forEach((d, i) => {
       const y = yScale(d.category) + yScale.bandwidth() / 2;
       
+      const labelGroup = g.append('g')
+        .attr('transform', `translate(0, ${y})`);
+      
       // Icon
-      g.append('image')
+      labelGroup.append('image')
         .attr('xlink:href', d.iconPath)
-        .attr('x', -45)
-        .attr('y', y - 12)
+        .attr('x', -50)
+        .attr('y', -12)
         .attr('width', 24)
         .attr('height', 24)
+        .attr('alt', `${d.label} icon`)
         .style('opacity', 0)
         .transition()
-        .delay(i * 120)
-        .duration(400)
+        .delay(prefersReducedMotion ? 0 : i * 120)
+        .duration(prefersReducedMotion ? 0 : 400)
         .style('opacity', 1);
       
-      // Label
-      g.append('text')
-        .attr('x', -55)
-        .attr('y', y + 5)
-        .attr('text-anchor', 'end')
-        .style('font-family', 'monospace')
-        .style('font-size', '11px')
-        .style('fill', 'rgba(255, 255, 255, 0.7)')
-        .style('opacity', 0)
-        .text(d.label)
-        .transition()
-        .delay(i * 120 + 200)
-        .duration(400)
-        .style('opacity', 1);
+      // Label text - split long labels into two lines if needed
+      const labelText = d.label;
+      const words = labelText.split(' ');
+      
+      if (words.length > 1 && labelText.length > 12) {
+        // Multi-line label
+        labelGroup.append('text')
+          .attr('x', -60)
+          .attr('y', -5)
+          .attr('text-anchor', 'end')
+          .style('font-family', 'monospace')
+          .style('font-size', '10px')
+          .style('fill', 'rgba(255, 255, 255, 0.7)')
+          .style('opacity', 0)
+          .text(words[0])
+          .transition()
+          .delay(prefersReducedMotion ? 0 : i * 120 + 200)
+          .duration(prefersReducedMotion ? 0 : 400)
+          .style('opacity', 1);
+        
+        labelGroup.append('text')
+          .attr('x', -60)
+          .attr('y', 10)
+          .attr('text-anchor', 'end')
+          .style('font-family', 'monospace')
+          .style('font-size', '10px')
+          .style('fill', 'rgba(255, 255, 255, 0.7)')
+          .style('opacity', 0)
+          .text(words.slice(1).join(' '))
+          .transition()
+          .delay(prefersReducedMotion ? 0 : i * 120 + 200)
+          .duration(prefersReducedMotion ? 0 : 400)
+          .style('opacity', 1);
+      } else {
+        // Single line label
+        labelGroup.append('text')
+          .attr('x', -60)
+          .attr('y', 5)
+          .attr('text-anchor', 'end')
+          .style('font-family', 'monospace')
+          .style('font-size', '11px')
+          .style('fill', 'rgba(255, 255, 255, 0.7)')
+          .style('opacity', 0)
+          .text(labelText)
+          .transition()
+          .delay(prefersReducedMotion ? 0 : i * 120 + 200)
+          .duration(prefersReducedMotion ? 0 : 400)
+          .style('opacity', 1);
+      }
     });
     
     // X-axis
@@ -415,21 +533,70 @@
       .style('letter-spacing', '1px')
       .text('AVERAGE TRAINING MINUTES');
     
+    // Title
     svg.append('text')
       .attr('x', margin.left)
-      .attr('y', 30)
+      .attr('y', 35)
       .style('font-family', 'monospace')
       .style('font-size', '14px')
       .style('font-weight', 'bold')
       .style('fill', 'rgba(255, 255, 255, 0.7)')
       .style('letter-spacing', '1px')
-      .text('EVENT IMPACT ON TRAINING');
+    
+    svg.append('text')
+      .attr('x', margin.left)
+      .attr('y', 52)
+      .style('font-family', 'monospace')
+      .style('font-size', '10px')
+      .style('fill', 'rgba(255, 255, 255, 0.4)')
   }
 </script>
+
+<!-- Skip link -->
+<a href="#after-lollipop" class="skip-link">Skip lollipop chart</a>
+
+<!-- Live region for screen readers -->
+<div aria-live="polite" aria-atomic="true" class="sr-only">
+  {#if visible && impactData.length > 0}
+    Lollipop chart is now visible. 
+    Baseline training: {formatMinutes(baselineMinutes)}. 
+    Showing {impactData.length} event categories with their training impact.
+  {/if}
+</div>
 
 <div class="impact-container" class:visible>
   <svg bind:this={svgElement}></svg>
 </div>
+
+<!-- Hidden data table for screen readers -->
+{#if impactData.length > 0}
+<div class="sr-only">
+  <h3>Training Impact by Event Type</h3>
+  <table>
+    <caption>Average training minutes for different event types compared to baseline of {formatMinutes(baselineMinutes)}</caption>
+    <thead>
+      <tr>
+        <th scope="col">Event Type</th>
+        <th scope="col">Average Minutes</th>
+        <th scope="col">Active Days</th>
+        <th scope="col">Change from Baseline</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each impactData as item}
+      <tr>
+        <td>{item.label}</td>
+        <td>{formatMinutes(item.avgMinutes)}</td>
+        <td>{item.count} days</td>
+        <td>{item.category === 'normal' ? 'Baseline' : formatPercentage(item.change)}</td>
+      </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
+{/if}
+
+<div id="after-lollipop"></div>
 
 <style>
   .impact-container {
@@ -439,7 +606,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
     opacity: 0;
     transform: translateY(40px);
     transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
@@ -452,6 +618,49 @@
   
   .impact-container svg {
     display: block;
+  }
+  
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Skip link */
+  .skip-link {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    background: #35d1c5;
+    color: #0a0a0a;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+  
+  .skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    z-index: 1000;
+  }
+  
+  /* Keyboard focus styles */
+  :global(.lollipop-group:focus circle) {
+    filter: drop-shadow(0 0 8px currentColor) !important;
   }
   
   @media (prefers-reduced-motion: reduce) {
@@ -468,6 +677,14 @@
   @media (max-width: 768px) {
     .impact-container {
       padding: 20px 10px;
+    }
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .impact-container svg text {
+      stroke: none;
+      fill: white;
     }
   }
 </style>

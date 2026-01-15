@@ -71,11 +71,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 100px 24px 20px; 
+    padding: 80px 24px 20px; 
     background: #1a1a1a;
     opacity: 0;
     transform: translateY(40px);
-    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all1s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
