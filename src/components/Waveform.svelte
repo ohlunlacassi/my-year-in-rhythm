@@ -10,8 +10,9 @@
   let containerWidth = 0;
   let containerHeight = 0;
   let selectedSport = 'ALL';
+  let currentTooltipData = null;
   
-  const margin = { top: 60, right: 40, bottom: 80, left: 40 }; // REDUCED from 200 to 80
+  const margin = { top: 60, right: 40, bottom: 80, left: 40 };
   
   // Sport patterns
   const sportPatterns = {
@@ -38,6 +39,8 @@
   
   let sportsList = [];
   let processedData = [];
+  let totalHours = 0;
+  let activeWeeks = 0;
   
   $: {
     if (processedData.length > 0) {
@@ -95,11 +98,13 @@
     if (!svgElement || processedData.length === 0) return;
     
     const width = containerWidth - margin.left - margin.right;
-    const height = containerHeight || 500; // Reduced from 600 to 500
+    const height = containerHeight || 500;
     
     const svg = d3.select(svgElement)
       .attr('width', containerWidth)
-      .attr('height', height);
+      .attr('height', height)
+      .attr('role', 'img')
+      .attr('aria-label', `Training intensity waveform for ${sport === 'ALL' ? 'all activities' : sport.replace(/_/g, ' ')}`);
     
     svg.selectAll('*').remove();
     
@@ -173,7 +178,8 @@
         .attr('x1', 0).attr('x2', width)
         .attr('y1', y).attr('y2', y)
         .attr('stroke', 'rgba(0, 255, 150, 0.05)')
-        .attr('stroke-width', 0.5);
+        .attr('stroke-width', 0.5)
+        .attr('aria-hidden', 'true');
     }
     
     for (let x = 0; x < width; x += gridSpacing) {
@@ -182,7 +188,8 @@
         .attr('y1', 0)
         .attr('y2', height - margin.top - margin.bottom)
         .attr('stroke', 'rgba(0, 255, 150, 0.05)')
-        .attr('stroke-width', 0.5);
+        .attr('stroke-width', 0.5)
+        .attr('aria-hidden', 'true');
     }
     
     const pattern = sport !== 'ALL' && sportPatterns[sport]
@@ -244,6 +251,7 @@
       .attr('stroke', ecgColor)
       .attr('stroke-width', 2.5)
       .attr('filter', 'url(#glow)')
+      .attr('aria-hidden', 'true')
       .style('opacity', 0.9);
 
     const totalLength = path.node().getTotalLength();
@@ -279,7 +287,8 @@
       .attr('y1', centerY).attr('y2', centerY)
       .attr('stroke', `${ecgColor}40`)
       .attr('stroke-width', 1)
-      .attr('stroke-dasharray', '5,5');
+      .attr('stroke-dasharray', '5,5')
+      .attr('aria-hidden', 'true');
 
     // Detect rest periods
     const restPeriods = [];
@@ -361,7 +370,8 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
         .attr('height', 4)
         .attr('fill', hasEvents ? 'rgba(255, 150, 100, 0.4)' : 'rgba(255, 100, 100, 0.3)')
         .attr('stroke', hasEvents ? 'rgba(255, 150, 100, 0.7)' : 'rgba(255, 100, 100, 0.6)')
-        .attr('stroke-width', 1);
+        .attr('stroke-width', 1)
+        .attr('aria-hidden', 'true');
       
       // Calculate label dimensions
       const lineHeight = 14;
@@ -382,7 +392,8 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
         .attr('y2', labelTopY + labelHeight)
         .attr('stroke', hasEvents ? 'rgba(255, 150, 100, 0.6)' : 'rgba(255, 100, 100, 0.5)')
         .attr('stroke-width', 1)
-        .attr('stroke-dasharray', '2,2');
+        .attr('stroke-dasharray', '2,2')
+        .attr('aria-hidden', 'true');
       
       // Label background
       g.append('rect')
@@ -393,7 +404,8 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
         .attr('fill', hasEvents ? 'rgba(255, 150, 100, 0.25)' : 'rgba(255, 100, 100, 0.2)')
         .attr('stroke', hasEvents ? 'rgba(255, 150, 100, 0.5)' : 'rgba(255, 100, 100, 0.4)')
         .attr('stroke-width', 1)
-        .attr('rx', 4);
+        .attr('rx', 4)
+        .attr('aria-hidden', 'true');
     
         if (hasEvents) {
   eventLabels.forEach((label, i) => {
@@ -404,6 +416,7 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
       .attr('fill', 'rgba(255, 150, 100, 0.9)')
       .style('font-family', 'monospace')
       .style('font-size', '11px')
+      .attr('aria-hidden', 'true')
       .text(label);
   });
 } else {
@@ -414,6 +427,7 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
     .attr('fill', 'rgba(255, 100, 100, 0.8)')
     .style('font-family', 'monospace')
     .style('font-size', '11px')
+    .attr('aria-hidden', 'true')
     .text(`Rest (${period.duration}w)`);
 }
     });
@@ -446,8 +460,8 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
       .text(`⚡ ${sportName}`);
     
     // Stats
-    const totalHours = Math.floor(d3.sum(weeklyHeartbeats, d => d.minutes) / 60);
-    const activeWeeks = weeklyHeartbeats.filter(d => d.minutes > 0).length;
+    totalHours = Math.floor(d3.sum(weeklyHeartbeats, d => d.minutes) / 60);
+    activeWeeks = weeklyHeartbeats.filter(d => d.minutes > 0).length;
     const avgPerWeek = activeWeeks > 0 ? Math.round(d3.mean(weeklyHeartbeats.filter(d => d.minutes > 0), d => d.minutes)) : 0;
     
     svg.append('text')
@@ -464,8 +478,18 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
       .attr('width', width)
       .attr('height', height - margin.top - margin.bottom)
       .attr('opacity', 0)
+      .attr('role', 'application')
+      .attr('aria-label', 'Interactive chart area - hover to see weekly details')
+      .attr('tabindex', '0')
       .on('mousemove', handleMouseMove)
-      .on('mouseleave', hideTooltip);
+      .on('mouseleave', hideTooltip)
+      .on('focus', function() {
+        d3.select(this).style('outline', '2px solid #35d1c5');
+      })
+      .on('blur', function() {
+        d3.select(this).style('outline', 'none');
+        hideTooltip();
+      });
     
     function handleMouseMove(event) {
       const [mouseX] = d3.pointer(event);
@@ -490,16 +514,24 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
   function showTooltip(week, x, color) {
     if (!tooltipElement) return;
     
+    const hours = Math.floor(week.minutes / 60);
+    const minutes = Math.round(week.minutes % 60);
+    
+    currentTooltipData = {
+      date: d3.timeFormat('%b %d, %Y')(week.date),
+      hours,
+      minutes
+    };
+    
     tooltipElement.style.opacity = '1';
     tooltipElement.style.left = `${x + margin.left}px`;
     tooltipElement.style.top = `${margin.top + 100}px`;
     tooltipElement.style.borderColor = color;
     tooltipElement.style.boxShadow = `0 0 20px ${color}60`;
+    tooltipElement.setAttribute('role', 'status');
+    tooltipElement.setAttribute('aria-live', 'polite');
     
-    const hours = Math.floor(week.minutes / 60);
-    const minutes = Math.round(week.minutes % 60);
-    
-    let html = `<div class="tooltip-date">${d3.timeFormat('%b %d, %Y')(week.date)}</div>`;
+    let html = `<div class="tooltip-date">${currentTooltipData.date}</div>`;
     html += `<div class="tooltip-total" style="color: ${color}">⚡ ${hours}h ${minutes}m</div>`;
     
     tooltipElement.innerHTML = html;
@@ -508,23 +540,36 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
   function hideTooltip() {
     if (!tooltipElement) return;
     tooltipElement.style.opacity = '0';
+    tooltipElement.removeAttribute('role');
+    tooltipElement.removeAttribute('aria-live');
+    currentTooltipData = null;
   }
 </script>
+
+<!-- Screen reader description -->
+<div class="sr-only" role="status" aria-live="polite">
+  {#if selectedSport === 'ALL'}
+    Viewing training intensity for all activities. Total: {totalHours} hours across {activeWeeks} active weeks.
+  {:else}
+    Viewing training intensity for {selectedSport.replace(/_/g, ' ')}. Total: {totalHours} hours across {activeWeeks} active weeks.
+  {/if}
+</div>
 
 <div class="sport-dropdown-wrapper">
   <label for="sport-dropdown">ACTIVITY:</label>
   <select 
-  id="sport-dropdown"
-  bind:value={selectedSport}
-  style="--dropdown-color: {sportPatterns[selectedSport]?.color || '#35d1c5'}"
->
-  <option value="ALL">ALL ACTIVITIES</option>
-  {#each sportsList as {sport, hours}}
-    <option value={sport}>
-      {sport.replace(/_/g, ' ').toUpperCase()}
-    </option>
-  {/each}
-</select>
+    id="sport-dropdown"
+    bind:value={selectedSport}
+    style="--dropdown-color: {sportPatterns[selectedSport]?.color || '#35d1c5'}"
+    aria-label="Select activity type to filter training data"
+  >
+    <option value="ALL">ALL ACTIVITIES</option>
+    {#each sportsList as {sport, hours}}
+      <option value={sport}>
+        {sport.replace(/_/g, ' ').toUpperCase()}
+      </option>
+    {/each}
+  </select>
 </div>
 
 <div class="waveform-container">
@@ -537,7 +582,7 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 450px; /* Reduced from 500px */
+    min-height: 450px;
     background: #000000;
   }
   
@@ -593,6 +638,8 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
   #sport-dropdown:focus {
     border-color: var(--dropdown-color, #35d1c5);
     box-shadow: 0 0 25px var(--dropdown-color, #35d1c5);
+    outline: 2px solid var(--dropdown-color, #35d1c5);
+    outline-offset: 2px;
   }
 
   #sport-dropdown option {
@@ -629,5 +676,29 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 6px;
+  }
+  
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* High contrast */
+  @media (prefers-contrast: high) {
+    #sport-dropdown {
+      border-width: 2px;
+    }
+    
+    #sport-dropdown:focus {
+      outline-width: 3px;
+    }
   }
 </style>
