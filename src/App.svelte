@@ -11,7 +11,8 @@
   import ActivityBreakdown from './components/ActivityBreakdown.svelte';
   import ProgressMilestones from './components/ProgressMilestones.svelte';
   import EventImpactAnalysis from './components/EventImpactAnalysis.svelte';
-  import Conclusion from './components/Conclusion.svelte';  
+  import ConclusionHero from './components/ConclusionHero.svelte';
+  import ConclusionInsights from './components/ConclusionInsights.svelte';
   
   import { loadData } from './utils/dataLoader.js';
   import { wrangleData } from './utils/dataWrangler.js';
@@ -21,7 +22,7 @@
   let scrollContainer;
   let prefersReducedMotion = false;
   
-  const totalSections = 9;
+  const totalSections = 10;  // ← เปลี่ยนจาก 9 เป็น 10!
   
   let metrics = {
     totalTrainingHours: 0,
@@ -337,30 +338,47 @@
     </ScrollSection>
   </section>
 
-  <!-- Conclusion Section -->
-<section class="section-slide" aria-label="Conclusion and insights">
-  {#if dataLoaded}
-    <Conclusion 
-      metrics={{
-        totalSteps,
-        activeDays: metrics.activeDays,
-        pauseDays: metrics.pauseDays,
-        totalTrainingHours: metrics.totalTrainingHours
-      }}
-      master={master}
-    />
-  {:else}
-    <PlaceholderViz height="600px" label="Conclusion" />
-  {/if}
-</section>
+  <!-- Conclusion Hero Section (Section 9) -->
+  <section class="section-slide conclusion-hero-section" aria-label="Journey conclusion hero">
+    {#if dataLoaded}
+      <div class="conclusion-container">
+        <ConclusionHero />
+      </div>
+    {:else}
+      <PlaceholderViz height="600px" label="Conclusion Hero" />
+    {/if}
+  </section>
+
+  <!-- Conclusion Insights Section (Section 10) -->
+  <section class="section-slide conclusion-insights-section" aria-label="Journey insights and summary">
+    {#if dataLoaded}
+      <div class="conclusion-container">
+        <ConclusionInsights 
+          metrics={{
+            activeDays: metrics.activeDays,
+            pauseDays: metrics.pauseDays,
+            totalTrainingHours: metrics.totalTrainingHours
+          }}
+          master={master}
+        />
+      </div>
+    {:else}
+      <PlaceholderViz height="600px" label="Journey Insights" />
+    {/if}
+  </section>
 
 </div>
 
 <style>
+  :global(html) {
+    overflow-x: hidden;
+  }
+  
   :global(body) {
     background: #0a0a0a;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
   }
   
   /* Skip Link for accessibility */
@@ -414,6 +432,25 @@
     scroll-snap-align: start;
     scroll-snap-stop: always;
     background: #0a0a0a; /* Consistent dark background for all sections */
+    overflow-x: hidden;
+  }
+  
+  /* Conclusion sections styling */
+  .conclusion-hero-section,
+  .conclusion-insights-section {
+    background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%);
+  }
+  
+  .conclusion-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
   }
   
   /* Focus styles for keyboard navigation */
@@ -488,6 +525,10 @@
     
     .insights {
       padding: 32px;
+    }
+    
+    .conclusion-container {
+      padding: 60px 20px;
     }
   }
   
