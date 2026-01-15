@@ -1,26 +1,50 @@
 <script>
   export let sportData = [];
+  
+  // Calculate total calories with safety check
+  $: totalCalories = sportData.length > 0 
+    ? sportData.reduce((sum, s) => sum + (Number(s.caloriesK) || 0), 0)
+    : 0;
+  
+  // Format for display
+  $: totalCaloriesFormatted = Number(totalCalories).toFixed(1);
 </script>
 
-<div class="legend-section">
+<section 
+  class="legend-section"
+  aria-labelledby="legend-title"
+>
   {#if sportData.length > 0}
     <div class="legend-wrapper">
-      <div class="energy-description">
+      <!-- Screen reader title -->
+     <h2 id="legend-title" class="sr-only">
+      Activity Energy Breakdown: {sportData.length} activities, {totalCaloriesFormatted}k total calories
+    </h2>
+      
+      <div class="energy-description" aria-hidden="true">
         <p>Energy burned across {sportData.length} activities. Each pulse ring represents calorie contribution from different sports.</p>
       </div>
       
-      <div class="legend-grid">
+      <ul class="legend-grid" role="list">
         {#each sportData as sport}
-          <div class="legend-item">
-            <span class="legend-pulse" style="background: {sport.color}"></span>
+          <li 
+            class="legend-item"
+            role="listitem"
+            aria-label="{sport.label}: {sport.caloriesK}k calories burned"
+          >
+            <span 
+              class="legend-pulse" 
+              style="background: {sport.color}"
+              aria-hidden="true"
+            ></span>
             <span class="legend-label">{sport.label}</span>
-            <span class="legend-calories">{sport.caloriesK}k cal</span>
-          </div>
+            <span class="legend-calories" aria-hidden="true">{sport.caloriesK}k cal</span>
+          </li>
         {/each}
-      </div>
+      </ul>
     </div>
   {/if}
-</div>
+</section>
 
 <style>
   .legend-section {
@@ -58,6 +82,9 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
   
   .legend-item {
@@ -107,6 +134,41 @@
     font-size: 0.9rem;
     color: rgba(255, 122, 92, 0.9);
     font-weight: bold;
+  }
+  
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .legend-item {
+      transition: none;
+    }
+    
+    .legend-item:hover {
+      transform: none;
+    }
+    
+    .legend-pulse {
+      animation: none;
+    }
+  }
+  
+  /* High contrast */
+  @media (prefers-contrast: high) {
+    .legend-item {
+      border-width: 2px;
+    }
   }
   
   @media (max-width: 768px) {
