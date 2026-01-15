@@ -49,7 +49,7 @@
     
     <p class="eyebrow" role="doc-subtitle">
       <span class="dot" aria-hidden="true"></span>
-      DATA STORY / 2024 - 25
+      DATA STORY / Oct'24 - Dec'25
     </p>
     
     <h1 class="title" id="main-title">
