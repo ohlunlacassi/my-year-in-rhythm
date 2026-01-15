@@ -473,6 +473,8 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
       .text(`${totalHours}h | ${activeWeeks}w | ~${avgPerWeek}m/w`);
     
     // Interaction
+    let isKeyboardFocus = false;
+    
     const overlay = g.append('rect')
       .attr('class', 'overlay')
       .attr('width', width)
@@ -483,8 +485,16 @@ if (sport === 'ALL' && calendar && calendar.length > 0) {
       .attr('tabindex', '0')
       .on('mousemove', handleMouseMove)
       .on('mouseleave', hideTooltip)
+      .on('mousedown', function() {
+        isKeyboardFocus = false;
+      })
+      .on('keydown', function() {
+        isKeyboardFocus = true;
+      })
       .on('focus', function() {
-        d3.select(this).style('outline', '2px solid #35d1c5');
+        if (isKeyboardFocus) {
+          d3.select(this).style('outline', '2px solid #35d1c5');
+        }
       })
       .on('blur', function() {
         d3.select(this).style('outline', 'none');

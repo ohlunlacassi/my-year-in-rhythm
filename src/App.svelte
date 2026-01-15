@@ -508,12 +508,12 @@
   
   /* Focus styles for keyboard navigation */
   .scroll-wrapper:focus {
-    outline: 2px solid #35d1c5;
-    outline-offset: -2px;
+    outline: none;
   }
   
-  .scroll-wrapper:focus:not(:focus-visible) {
-    outline: none;
+  .scroll-wrapper:focus-visible {
+    outline: 2px solid #35d1c5;
+    outline-offset: -2px;
   }
   
   /* Metrics Grid */
