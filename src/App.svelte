@@ -186,9 +186,18 @@
     selectedSport = event.detail.sport;
     console.log('Selected sport:', selectedSport);
   }
+  
+  function handleProgressBarClick(event) {
+    const sectionIndex = event.detail.section;
+    navigateToSection(sectionIndex);
+  }
 </script>
 
-<ProgressBar total={totalSections} current={currentSection} />
+<ProgressBar 
+  total={totalSections} 
+  current={currentSection}
+  on:navigate={handleProgressBarClick}
+/>
 
 <!-- Skip to content link for keyboard users -->
 <a href="#main-content" class="skip-link">Skip to main content</a>

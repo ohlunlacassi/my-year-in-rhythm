@@ -356,6 +356,5 @@
     justify-content: center;
     position: relative;
     z-index: 1;
-    margin-top: -40px;
   }
 </style>
