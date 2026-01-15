@@ -355,6 +355,12 @@
     scrollbar-width: none;
   }
   
+  /* Remove all focus outlines */
+  :global(*:focus),
+  :global(*:focus-visible) {
+    outline: none !important;
+  }
+  
   :global(*::-webkit-scrollbar) {
     display: none;
     width: 0;
@@ -462,13 +468,9 @@
   }
   
   /* Focus styles for keyboard navigation */
-  .scroll-wrapper:focus {
-    outline: none;
-  }
-  
+  .scroll-wrapper:focus,
   .scroll-wrapper:focus-visible {
-    outline: 2px solid #35d1c5;
-    outline-offset: -2px;
+    outline: none;
   }
   
   /* Metrics Grid */
