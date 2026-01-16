@@ -12,10 +12,124 @@
   let visible = false;
   let hasAnimated = false;
   let prefersReducedMotion = false;
+  let selectedMilestoneIndex = null;
   
   // Helper function for date formatting
   function formatDate(date) {
     return d3.timeFormat("%b'%y")(date);
+  }
+  
+  function calculateCaloriesForMilestone(milestoneIndex) {
+    if (!milestones || milestones.length === 0 || !sportRecords) return 0;
+    
+    const currentMilestone = milestones[milestoneIndex];
+    const startDate = new Date(2024, 9, 17);
+    const endDate = currentMilestone.date;
+    
+    // Sum ALL calories from START to this milestone (cumulative)
+    const totalCalories = sportRecords
+      .filter(record => {
+        const recordDate = record.time instanceof Date ? record.time : new Date(record.time);
+        return recordDate >= startDate && recordDate <= endDate;
+      })
+      .reduce((sum, record) => sum + (record.calories || 0), 0);
+    
+    return totalCalories;
+  }
+  
+  function drawCalorieBadge(g, xScale, height) {
+    if (selectedMilestoneIndex === null || !milestones[selectedMilestoneIndex]) return;
+    
+    const x = xScale(selectedMilestoneIndex);
+    const y = height / 2;
+    const calories = calculateCaloriesForMilestone(selectedMilestoneIndex);
+    const caloriesK = (calories / 1000).toFixed(1);
+    
+    const badge = g.append('g')
+      .attr('class', 'calorie-badge')
+      .attr('transform', `translate(${x}, ${y - 80})`);
+    
+    badge.append('rect')
+      .attr('x', -35)
+      .attr('y', -11)
+      .attr('width', 70)
+      .attr('height', 22)
+      .attr('rx', 4)
+      .attr('fill', '#0a0a0a')
+      .attr('stroke', '#35d1c5')
+      .attr('stroke-width', 1.5)
+      .attr('opacity', 0.95);
+    
+    badge.append('path')
+      .attr('d', 'M -4,14 L 0,19 L 4,14 Z')
+      .attr('fill', '#35d1c5');
+    
+    badge.append('text')
+      .attr('x', 0)
+      .attr('y', 4)
+      .attr('text-anchor', 'middle')
+      .style('font-family', 'monospace')
+      .style('font-size', '12px')
+      .style('font-weight', 'bold')
+      .style('fill', '#35d1c5')
+      .text(`${caloriesK}k cal`);
+  }
+  
+  function handleMilestoneClick(index) {
+    const previousIndex = selectedMilestoneIndex;
+    
+    if (selectedMilestoneIndex === index) {
+      selectedMilestoneIndex = null;
+    } else {
+      selectedMilestoneIndex = index;
+    }
+ 
+    updateMilestoneSelection(previousIndex, selectedMilestoneIndex);
+  }
+
+  function updateMilestoneSelection(previousIndex, currentIndex) {
+    const svg = d3.select(svgElement);
+    const g = svg.select('g');
+    
+    if (!g.node()) return;
+    
+    const margin = { top: 40, right: 60, bottom: 80, left: 100 };
+    const width = Math.min(containerWidth * 0.9, 1000) - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+    
+    const xScale = d3.scaleLinear()
+      .domain([0, milestones.length - 1])
+      .range([0, width]);
+    
+    // Remove old badge
+    g.selectAll('.calorie-badge').remove();
+    
+    // Update previous milestone circle (if exists)
+    if (previousIndex !== null) {
+      g.selectAll('.milestone-group')
+        .filter((d, i) => i === previousIndex)
+        .select('circle')
+        .transition()
+        .duration(200)
+        .attr('r', 12)
+        .attr('stroke', '#0a0a0a')
+        .attr('stroke-width', 3);
+    }
+    
+    // Update current milestone circle (if exists)
+    if (currentIndex !== null) {
+      g.selectAll('.milestone-group')
+        .filter((d, i) => i === currentIndex)
+        .select('circle')
+        .transition()
+        .duration(200)
+        .attr('r', 16)
+        .attr('stroke', '#ffffff')
+        .attr('stroke-width', 5);
+      
+      // Draw new badge
+      drawCalorieBadge(g, xScale, height);
+    }
   }
   
   onMount(() => {
@@ -82,8 +196,7 @@
     milestones = [];
     let currentMilestone = 50;
     let previousMilestoneDate = null;
-    // Use fixed start date: Oct 17, 2024 (when data collection started)
-    startDate = new Date(2024, 9, 17);  // Month is 0-indexed, so 9 = October, day 17
+    startDate = new Date(2024, 9, 17);
     
     cumulativeByDate.forEach(point => {
       while (point.hours >= currentMilestone && currentMilestone <= 500) {
@@ -92,10 +205,8 @@
         // Calculate days since last milestone
         let daysSince;
         if (previousMilestoneDate === null) {
-          // First milestone - days from start
           daysSince = Math.round((milestoneDate - startDate) / (1000 * 60 * 60 * 24));
         } else {
-          // Subsequent milestones - days from previous milestone
           daysSince = Math.round((milestoneDate - previousMilestoneDate) / (1000 * 60 * 60 * 24));
         }
         
@@ -309,7 +420,14 @@
         .attr('role', 'button')
         .attr('aria-label', `${milestone.isFinal ? 'Final milestone' : `Lap ${milestone.lapNumber}`}: ${milestone.hours} hours reached on ${formatDate(milestone.date)}. ${paceLabels[milestone.pace]}: ${milestone.daysSinceLastMilestone} days since ${i === 0 ? 'start' : 'last milestone'}.`)
         .style('cursor', 'pointer')
-        .style('outline', 'none');
+        .style('outline', 'none')
+        .on('click', () => handleMilestoneClick(i))
+        .on('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            handleMilestoneClick(i);
+          }
+        });
       
       // Add title for tooltip
       milestoneGroup.append('title')
@@ -319,17 +437,17 @@
       const checkpoint = milestoneGroup.append('circle')
         .attr('cx', x)
         .attr('cy', y)
-        .attr('r', prefersReducedMotion ? 12 : 0)
+        .attr('r', prefersReducedMotion ? (selectedMilestoneIndex === i ? 16 : 12) : 0)
         .attr('fill', paceColors[milestone.pace])
-        .attr('stroke', '#0a0a0a')
-        .attr('stroke-width', 3);
+        .attr('stroke', selectedMilestoneIndex === i ? '#ffffff' : '#0a0a0a')
+        .attr('stroke-width', selectedMilestoneIndex === i ? 5 : 3);
       
       if (!prefersReducedMotion) {
         checkpoint.transition()
           .delay(i * 150 + 800)
           .duration(400)
           .ease(d3.easeBackOut)
-          .attr('r', 12);
+          .attr('r', selectedMilestoneIndex === i ? 16 : 12);
       }
       
       // Focus state styling
@@ -341,15 +459,8 @@
         })
         .on('blur', function() {
           d3.select(this).select('circle')
-            .attr('stroke', '#0a0a0a')
-            .attr('stroke-width', 3);
-        })
-        .on('keydown', function(event) {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            // Could add click behavior here
-            console.log('Milestone selected:', milestone);
-          }
+            .attr('stroke', selectedMilestoneIndex === i ? '#ffffff' : '#0a0a0a')
+            .attr('stroke-width', selectedMilestoneIndex === i ? 5 : 3);
         });
       
       // Hours label (above)
@@ -478,6 +589,10 @@
         .style('opacity', 1);
     });
     
+    if (selectedMilestoneIndex !== null) {
+      drawCalorieBadge(g, xScale, height);
+    }
+    
     // Animated runner emoji (hide if reduced motion)
     if (!prefersReducedMotion) {
       const runner = g.append('text')
@@ -570,6 +685,8 @@
         .text(`${item.label} ${item.desc}`);
     });
   }
+
+  
 </script>
 
 <!-- Skip link for accessibility -->
