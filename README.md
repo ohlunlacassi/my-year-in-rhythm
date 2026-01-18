@@ -114,7 +114,7 @@ The `calendar_viz` folder contains a **separate preprocessing workflow** used to
 This preprocessing step is **not required** to run the website.  
 The final processed files are already copied to:
 
-public/data/
+`public/data/`
 
 The Svelte application only reads data from this folder.  
 `calendar_viz` is included for **transparency and documentation**, showing how raw personal data was transformed.
@@ -125,7 +125,7 @@ The Svelte application only reads data from this folder.
 
 The visualization loads static CSV files from:
 
-public/data/
+`public/data/`
 
 - `fitness_daily.csv` – Daily training duration and intensity
 - `sport_record.csv` – Calories burned per activity
