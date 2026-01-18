@@ -1,0 +1,13 @@
+title,start,end,event_type,event_category,is_all_day,source_file
+Karfreitag,2025-04-18 00:00:00+00:00,2025-04-18 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Allerheiligen,2024-11-01 00:00:00+00:00,2024-11-01 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Tag der Deutschen Einheit,2024-10-03 00:00:00+00:00,2024-10-03 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Pfingstmontag,2025-06-09 00:00:00+00:00,2025-06-09 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Christi Himmelfahrt,2025-05-29 00:00:00+00:00,2025-05-29 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Fronleichnam,2025-06-19 00:00:00+00:00,2025-06-19 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+2. Weihnachtsfeiertag,2024-12-26 00:00:00+00:00,2024-12-26 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Ostermontag,2025-04-21 00:00:00+00:00,2025-04-21 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+1. Weihnachtsfeiertag,2024-12-25 00:00:00+00:00,2024-12-25 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+222: Themenpräsentation,2025-04-09 00:00:00+00:00,2025-04-09 00:00:00+00:00,personal,study,True,reminders.ics
+Stay: Hotel & Restaurant Olio é Pane 2 OBERHARMERSBACH,2025-08-23 00:00:00+00:00,2025-08-24 00:00:00+00:00,personal,travel,True,calendar_personal.ics
+Stay: 24Hours-Apartment & Arion Cityhotel Vienna,2025-04-19 00:00:00+00:00,2025-04-21 00:00:00+00:00,personal,travel,True,calendar_personal.ics

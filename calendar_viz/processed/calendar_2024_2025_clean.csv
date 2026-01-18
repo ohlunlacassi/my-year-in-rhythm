@@ -1,0 +1,134 @@
+title,start,end,event_type,event_category,is_all_day,source_file
+Karfreitag,2025-04-18 00:00:00+00:00,2025-04-18 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Allerheiligen,2024-11-01 00:00:00+00:00,2024-11-01 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Tag der Deutschen Einheit,2024-10-03 00:00:00+00:00,2024-10-03 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Pfingstmontag,2025-06-09 00:00:00+00:00,2025-06-09 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Christi Himmelfahrt,2025-05-29 00:00:00+00:00,2025-05-29 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Fronleichnam,2025-06-19 00:00:00+00:00,2025-06-19 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+2. Weihnachtsfeiertag,2024-12-26 00:00:00+00:00,2024-12-26 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+Ostermontag,2025-04-21 00:00:00+00:00,2025-04-21 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+1. Weihnachtsfeiertag,2024-12-25 00:00:00+00:00,2024-12-25 00:00:00+00:00,holiday,holiday,True,holidays_de.ics.ics
+222: Präsentation,2025-05-21 07:00:00+00:00,2025-05-21 07:00:00+00:00,personal,study,False,reminders.ics
+225: Abgabe Projektarbeit,2025-06-30 21:00:00+00:00,2025-06-30 21:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 11,2024-12-05 19:00:00+00:00,2024-12-05 19:00:00+00:00,personal,study,False,reminders.ics
+222: Themenpräsentation,2025-04-09 00:00:00+00:00,2025-04-09 00:00:00+00:00,personal,study,True,reminders.ics
+102: Ode an den Müll,2025-01-11 19:00:00+00:00,2025-01-11 19:00:00+00:00,personal,study,False,reminders.ics
+325: Präsentation,2025-11-05 08:00:00+00:00,2025-11-05 08:00:00+00:00,personal,study,False,reminders.ics
+125: Reflexion,2025-01-21 22:55:00+00:00,2025-01-21 22:55:00+00:00,personal,study,False,reminders.ics
+225: Endpräsentation,2025-07-01 07:00:00+00:00,2025-07-01 07:00:00+00:00,personal,study,False,reminders.ics
+222: Präsentation,2025-06-04 07:00:00+00:00,2025-06-04 07:00:00+00:00,personal,study,False,reminders.ics
+125: HA IF-Bot installieren und analysieren,2024-10-28 22:55:00+00:00,2024-10-28 22:55:00+00:00,personal,study,False,reminders.ics
+322: Warm Up,2025-11-25 08:00:00+00:00,2025-11-25 08:00:00+00:00,personal,study,False,reminders.ics
+102: Semesterdokumentation,2025-01-10 19:00:00+00:00,2025-01-10 19:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 8,2024-11-21 19:00:00+00:00,2024-11-21 19:00:00+00:00,personal,study,False,reminders.ics
+Wäsche hochtragen,2025-02-19 12:00:00+00:00,2025-02-19 12:00:00+00:00,personal,reminder,False,reminders.ics
+323: Initiale Datenanalyse für Semesterprojekt,2025-11-12 22:00:00+00:00,2025-11-12 22:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 5,2024-10-24 18:00:00+00:00,2024-10-24 18:00:00+00:00,personal,study,False,reminders.ics
+125: Ideation und Sprint 1,2024-12-10 22:55:00+00:00,2024-12-10 22:55:00+00:00,personal,study,False,reminders.ics
+ยกเลิกสมาชิก Canva,2024-11-06 09:00:00+00:00,2024-11-06 09:00:00+00:00,personal,reminder,False,reminders.ics
+102: Übung 5b,2024-10-31 19:00:00+00:00,2024-10-31 19:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 12,2024-12-18 10:00:00+00:00,2024-12-18 10:00:00+00:00,personal,study,False,reminders.ics
+222: Referat,2025-04-30 07:00:00+00:00,2025-04-30 07:00:00+00:00,personal,study,False,reminders.ics
+"225: Zwischenpräsentation, Projektarbeit",2025-05-13 07:00:00+00:00,2025-05-13 07:00:00+00:00,personal,study,False,reminders.ics
+125: Abschlusspräsentation,2025-01-20 22:55:00+00:00,2025-01-20 22:55:00+00:00,personal,study,False,reminders.ics
+102: Übung 1b,2024-10-17 18:00:00+00:00,2024-10-17 18:00:00+00:00,personal,study,False,reminders.ics
+125: Themenpräsentation,2024-10-29 22:55:00+00:00,2024-10-29 22:55:00+00:00,personal,study,False,reminders.ics
+325 Zwischenpräsentation,2025-11-12 08:00:00+00:00,2025-11-12 08:00:00+00:00,personal,study,False,reminders.ics
+125: User Research & Sprint 0,2024-11-12 22:55:00+00:00,2024-11-12 22:55:00+00:00,personal,study,False,reminders.ics
+327: Visual Perception + Plan for Final Project,2025-10-29 22:00:00+00:00,2025-10-29 22:00:00+00:00,personal,study,False,reminders.ics
+321: Praktikum 3,2025-11-09 22:00:00+00:00,2025-11-09 22:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 13,2025-01-08 19:00:00+00:00,2025-01-08 19:00:00+00:00,personal,study,False,reminders.ics
+201: Hausarbeit,2025-05-23 14:00:00+00:00,2025-05-23 14:00:00+00:00,personal,study,False,reminders.ics
+322: Präsentation Prototypen,2025-12-02 08:00:00+00:00,2025-12-02 08:00:00+00:00,personal,study,False,reminders.ics
+125: Issues in GitHub,2024-11-18 22:55:00+00:00,2024-11-18 22:55:00+00:00,personal,study,False,reminders.ics
+125: HA Teambot erste Version,2024-11-05 22:55:00+00:00,2024-11-05 22:55:00+00:00,personal,study,False,reminders.ics
+125: HA Einfachwr Chat,2024-10-21 21:55:00+00:00,2024-10-21 21:55:00+00:00,personal,study,False,reminders.ics
+222: Researchsynthese & Zwischenpräsentation,2025-06-25 07:00:00+00:00,2025-06-25 07:00:00+00:00,personal,study,False,reminders.ics
+"Streicholz, Tee, laktosefreie Milch, proteinbrot",2025-04-17 07:00:00+00:00,2025-04-17 07:00:00+00:00,personal,reminder,False,reminders.ics
+102: Poster Referat,2024-12-20 19:00:00+00:00,2024-12-20 19:00:00+00:00,personal,study,False,reminders.ics
+125: HA User Interview Durchführung,2024-11-04 22:55:00+00:00,2024-11-04 22:55:00+00:00,personal,study,False,reminders.ics
+322 Abgabe: Ideation Concept + Peer Review,2025-11-10 22:00:00+00:00,2025-11-10 22:00:00+00:00,personal,study,False,reminders.ics
+222: Research & Synthese,2025-06-24 21:00:00+00:00,2025-06-24 21:00:00+00:00,personal,study,False,reminders.ics
+125: HA Typen von Variablen ist fällig,2024-10-14 21:55:00+00:00,2024-10-14 21:55:00+00:00,personal,study,False,reminders.ics
+222: Warmup & Abschlusspräsentation,2025-07-02 07:00:00+00:00,2025-07-02 07:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 7,2024-11-14 19:00:00+00:00,2024-11-14 19:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 9,2024-11-21 19:00:00+00:00,2024-11-21 19:00:00+00:00,personal,study,False,reminders.ics
+322: Reflexion Impuls & Prototyping,2025-11-09 22:00:00+00:00,2025-11-09 22:00:00+00:00,personal,study,False,reminders.ics
+225: Modul Prozesse,2025-03-31 16:00:00+00:00,2025-03-31 16:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 2,2024-10-17 18:00:00+00:00,2024-10-17 18:00:00+00:00,personal,study,False,reminders.ics
+222: User Journey & Cultural Probes,2025-06-03 14:00:00+00:00,2025-06-03 14:00:00+00:00,personal,study,False,reminders.ics
+102: Ode an den Müll - Plakatserie,2025-01-10 19:00:00+00:00,2025-01-10 19:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 1A,2024-10-17 18:00:00+00:00,2024-10-17 18:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 4,2024-10-24 18:00:00+00:00,2024-10-24 18:00:00+00:00,personal,study,False,reminders.ics
+322 Referat: Persuasive Technology,2025-11-11 08:00:00+00:00,2025-11-11 08:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 3,2024-10-17 18:00:00+00:00,2024-10-17 18:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 6,2024-11-07 19:00:00+00:00,2024-11-07 19:00:00+00:00,personal,study,False,reminders.ics
+325: Zwischenpräsentation,2025-12-17 08:00:00+00:00,2025-12-17 08:00:00+00:00,personal,study,False,reminders.ics
+102: Übung 10,2024-11-28 19:00:00+00:00,2024-11-28 19:00:00+00:00,personal,study,False,reminders.ics
+125: Reflexion BMW,2024-12-09 22:55:00+00:00,2024-12-09 22:55:00+00:00,personal,study,False,reminders.ics
+125 HA: Sammeln von Chatbot-Anwendungsfällen,2024-10-21 21:55:00+00:00,2024-10-21 21:55:00+00:00,personal,reminder,False,reminders.ics
+222: เขียน reviews user-centered and service design,2025-07-04 12:00:00+00:00,2025-07-04 12:00:00+00:00,personal,study,False,reminders.ics
+125: Sprint 2,2025-01-14 22:55:00+00:00,2025-01-14 22:55:00+00:00,personal,study,False,reminders.ics
+Ambulante Psychiater,2025-12-30 15:00:00+00:00,2025-12-30 16:00:00+00:00,personal,health,False,calendar_personal2.ics
+Ambulante Psychiater,2025-08-11 13:30:00+00:00,2025-08-11 14:30:00+00:00,personal,health,False,calendar_personal2.ics
+Ambulante Psychotherapie,2025-06-05 12:00:00+00:00,2025-06-05 13:00:00+00:00,personal,health,False,calendar_personal.ics
+Psychotherapie-Termin,2024-10-10 12:00:00+00:00,2024-10-10 13:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-11-10 12:30:00+00:00,2025-11-10 13:30:00+00:00,personal,health,False,calendar_personal.ics
+101 Computational Thinking - zweite Prüfungen,2025-01-20 10:45:00+00:00,2025-01-20 12:15:00+00:00,personal,study,False,calendar_personal.ics
+Termin beim Hausarzt,2024-11-08 08:30:00+00:00,2024-11-08 09:30:00+00:00,personal,health,False,calendar_personal.ics
+Reformer base @ REFORMERWOMAN München,2025-11-02 10:00:00+00:00,2025-11-02 10:50:00+00:00,personal,training,False,calendar_personal.ics
+ambulante Termin,2025-04-30 13:00:00+00:00,2025-04-30 14:00:00+00:00,personal,health,False,calendar_personal.ics
+นัดหมอ Lungen,2025-04-17 07:40:00+00:00,2025-04-17 08:40:00+00:00,personal,health,False,calendar_personal.ics
+Prüfungs von Software Engineering,2025-07-04 06:30:00+00:00,2025-07-04 07:30:00+00:00,personal,study,False,calendar_personal.ics
+Termin beim Hausarzt,2025-09-29 15:15:00+00:00,2025-09-29 16:15:00+00:00,personal,health,False,calendar_personal.ics
+ambulante Termin,2025-05-23 11:00:00+00:00,2025-05-23 12:00:00+00:00,personal,health,False,calendar_personal.ics
+Termin beim Hausarzt (EKG),2025-04-28 08:00:00+00:00,2025-04-28 09:00:00+00:00,personal,health,False,calendar_personal.ics
+Termin - Frau Dr. Fowzya Aljuaid,2025-10-01 07:24:00+00:00,2025-10-01 07:36:00+00:00,personal,health,False,calendar_personal.ics
+Termin für Lupus,2025-01-14 08:00:00+00:00,2025-01-14 09:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-05-05 07:00:00+00:00,2025-05-05 08:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-08-04 08:00:00+00:00,2025-08-04 09:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-06-16 12:00:00+00:00,2025-06-16 13:00:00+00:00,personal,health,False,calendar_personal.ics
+Termin bei Herr Dr. Vahan Agekian,2025-02-06 08:45:00+00:00,2025-02-06 09:00:00+00:00,personal,health,False,calendar_personal.ics
+Termin bei Psychiater,2025-07-16 12:30:00+00:00,2025-07-16 13:30:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-05-19 13:00:00+00:00,2025-05-19 14:00:00+00:00,personal,health,False,calendar_personal.ics
+ทำฟัน,2025-09-17 06:30:00+00:00,2025-09-17 07:30:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-09-29 11:30:00+00:00,2025-09-29 12:30:00+00:00,personal,health,False,calendar_personal.ics
+Termin beim Hausarzt,2025-01-10 07:00:00+00:00,2025-01-10 08:00:00+00:00,personal,health,False,calendar_personal.ics
+Termin beim Lungenarzt,2025-10-01 09:00:00+00:00,2025-10-01 10:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-04-24 07:30:00+00:00,2025-04-24 08:30:00+00:00,personal,health,False,calendar_personal.ics
+Termin bei ambulante Therapie,2025-01-13 09:00:00+00:00,2025-01-13 10:00:00+00:00,personal,health,False,calendar_personal.ics
+ambulante Termin,2024-11-06 09:00:00+00:00,2024-11-06 10:00:00+00:00,personal,health,False,calendar_personal.ics
+กลับเยอรมัน,2025-09-18 07:05:00+00:00,2025-09-18 08:05:00+00:00,personal,travel,False,calendar_personal.ics
+Termin bei Frau Dr. Julia Wallenborn,2025-09-29 07:00:00+00:00,2025-09-29 07:30:00+00:00,personal,health,False,calendar_personal.ics
+Termin für Lungenarzt,2025-01-21 09:00:00+00:00,2025-01-21 10:00:00+00:00,personal,health,False,calendar_personal.ics
+Telc C1 schriftliche Prüfung,2025-12-13 08:00:00+00:00,2025-12-13 11:45:00+00:00,personal,study,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-08-21 08:00:00+00:00,2025-08-21 09:00:00+00:00,personal,health,False,calendar_personal.ics
+นัดหมอ Lupus,2025-07-11 08:45:00+00:00,2025-07-11 09:45:00+00:00,personal,health,False,calendar_personal.ics
+Telc C1 mündliche Prüfung,2025-12-13 14:30:00+00:00,2025-12-13 16:45:00+00:00,personal,study,False,calendar_personal.ics
+Termin bei ambulante Therapie,2025-02-10 09:30:00+00:00,2025-02-10 10:30:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-07-24 07:30:00+00:00,2025-07-24 08:30:00+00:00,personal,health,False,calendar_personal.ics
+Termin für Lupus,2025-04-07 06:45:00+00:00,2025-04-07 07:45:00+00:00,personal,health,False,calendar_personal.ics
+Stay: Hotel & Restaurant Olio é Pane 2 OBERHARMERSBACH,2025-08-23 00:00:00+00:00,2025-08-24 00:00:00+00:00,personal,travel,True,calendar_personal.ics
+Termin - Herr Dr. med. Oliver Hollfelder,2025-08-19 08:12:00+00:00,2025-08-19 08:24:00+00:00,personal,health,False,calendar_personal.ics
+201: Software Engineering Test,2025-04-11 06:30:00+00:00,2025-04-11 07:30:00+00:00,personal,study,False,calendar_personal.ics
+Reformer base,2025-10-27 09:30:00+00:00,2025-10-27 10:20:00+00:00,personal,training,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-04-14 07:00:00+00:00,2025-04-14 08:00:00+00:00,personal,health,False,calendar_personal.ics
+Termin für Lupus,2025-11-11 07:45:00+00:00,2025-11-11 08:45:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-12-29 12:30:00+00:00,2025-12-29 13:30:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-10-20 07:00:00+00:00,2025-10-20 08:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-04-10 11:00:00+00:00,2025-04-10 12:00:00+00:00,personal,health,False,calendar_personal.ics
+ambulante Termin,2025-07-10 07:00:00+00:00,2025-07-10 08:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-08-14 07:00:00+00:00,2025-08-14 08:00:00+00:00,personal,health,False,calendar_personal.ics
+Termin für Lupus,2024-10-14 06:45:00+00:00,2024-10-14 07:45:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-12-15 10:00:00+00:00,2025-12-15 11:00:00+00:00,personal,health,False,calendar_personal.ics
+101 Computational Thinking - erste Teilprüfungen,2024-11-18 10:45:00+00:00,2024-11-18 11:45:00+00:00,personal,study,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-05-15 11:00:00+00:00,2025-05-15 12:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-12-01 08:00:00+00:00,2025-12-01 09:00:00+00:00,personal,health,False,calendar_personal.ics
+Stay: 24Hours-Apartment & Arion Cityhotel Vienna,2025-04-19 00:00:00+00:00,2025-04-21 00:00:00+00:00,personal,travel,True,calendar_personal.ics
+Ambulante Psychotherapie,2025-06-26 07:00:00+00:00,2025-06-26 08:00:00+00:00,personal,health,False,calendar_personal.ics
+Zahnarzttermin,2025-02-24 09:00:00+00:00,2025-02-24 10:00:00+00:00,personal,health,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-07-28 08:00:00+00:00,2025-07-28 09:00:00+00:00,personal,health,False,calendar_personal.ics
+กลับไทย,2025-08-26 20:30:00+00:00,2025-08-26 21:30:00+00:00,personal,travel,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-05-26 12:00:00+00:00,2025-05-26 13:00:00+00:00,personal,health,False,calendar_personal.ics
+102: Abschlusspräsentation,2025-01-11 08:00:00+00:00,2025-01-11 09:00:00+00:00,personal,study,False,calendar_personal.ics
+Ambulante Psychotherapie,2025-10-13 07:00:00+00:00,2025-10-13 08:00:00+00:00,personal,health,False,calendar_personal.ics
