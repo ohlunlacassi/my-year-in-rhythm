@@ -1,4 +1,4 @@
-# My Year in Rhythm 🎵
+# My Year in Rhythm
 
 **My Year in Rhythm** is a personal fitness data visualization project that transforms raw Mi Fitness and calendar data into a story-driven, interactive dashboard.
 
@@ -8,29 +8,29 @@ The visualization is designed as a scrollytelling experience and is **optimized 
 
 ---
 
-## ✨ Features
+## Features
 
-### Pulse & Pause 💓
+### Pulse & Pause
 
 Three animated metric cards summarize the year at a glance: total training time, active days, and rest days.
 
-### Steps Traveled 🏃
+### Steps Traveled
 
 An animated running track visualizes total steps and distance, enhanced with a playful real-world comparison.
 
-### The Ups and Downs 🌊
+### The Ups and Downs
 
 A heartbeat-style waveform shows daily training intensity across the year. Users can filter by sport, while key life events are marked directly on the timeline.
 
-### Energy Expenditure 💗
+### Energy Expenditure
 
 A central beating heart visualizes total calories burned. Surrounding color-coded pulses represent different sports, showing how each activity contributes to overall energy expenditure.
 
-### The Rhythm of Progress 🎯
+### The Rhythm of Progress
 
 An interactive timeline tracks training progress over time, highlighting milestones, pace changes, and cumulative statistics.
 
-### Life Events Impact on Training 📊
+### Life Events Impact on Training
 
 A simple comparison chart shows how health appointments and study-related events affected average training time compared to normal days.
 
@@ -46,7 +46,7 @@ This project is intentionally designed for **screens ≥ 668px**. Smaller device
 
 ---
 
-## 🎨 Design System
+## Design System
 
 ### Color Palette
 
@@ -63,7 +63,7 @@ This project is intentionally designed for **screens ≥ 668px**. Smaller device
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Core
 
@@ -80,7 +80,7 @@ This project is intentionally designed for **screens ≥ 668px**. Smaller device
 
 ---
 
-## 📂 Data & Preprocessing
+## Data & Preprocessing
 
 ### Data Sources
 
@@ -135,7 +135,7 @@ No backend services or external APIs are required.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -159,7 +159,7 @@ npm run preview
 
 The production build generates static assets in the dist/ folder and can be deployed to any static hosting service (e.g. Netlify or Vercel).
 
-## 🧪 Reproducibility Notes
+## Reproducibility Notes
 
 The project runs out of the box using the included data.
 
@@ -167,6 +167,6 @@ Re-running calendar_viz/convert.py is optional and only needed when new .ics fil
 
 All personal data has been anonymized and reduced to non-identifiable aggregates.
 
-## 📄 License
+## License
 
 This project was created for academic purposes.
