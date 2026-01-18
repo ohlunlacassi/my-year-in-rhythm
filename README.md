@@ -159,10 +159,3 @@ npm run preview
 
 The production build generates static assets in the dist/ folder and can be deployed to any static hosting service (e.g. Netlify or Vercel).
 
-## Reproducibility Notes
-
-The project runs out of the box using the included data.
-
-Re-running calendar_viz/convert.py is optional and only needed when new .ics files are added.
-
-All personal data has been anonymized and reduced to non-identifiable aggregates.
