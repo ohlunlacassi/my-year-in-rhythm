@@ -19,7 +19,6 @@
   import { loadData } from './utils/dataLoader.js';
   import { wrangleData } from './utils/dataWrangler.js';
   import { calculateMetrics, processSportData } from './utils/calculations.js';
-  import { sportPatterns } from './utils/sportConfig';
   
   let currentSection = 0;
   let scrollContainer;

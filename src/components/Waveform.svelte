@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+  import { sportPatterns } from '../utils/sportConfig';
   
   export let sportRecords = [];
   export let calendar = [];
@@ -13,30 +14,7 @@
   let currentTooltipData = null;
   
   const margin = { top: 60, right: 40, bottom: 80, left: 40 };
-  
-  // Sport patterns
-  const sportPatterns = {
-    'outdoor_running': { freq: 0.8, amp: 1.2, pattern: 'sharp', color: '#35d1c5' },
-    'outdoor_walking': { freq: 0.5, amp: 0.6, pattern: 'smooth', color: '#00d4ff' },
-    'aerobics': { freq: 1.0, amp: 1.3, pattern: 'sharp', color: '#ff0080' },
-    'mixed_aerobics': { freq: 0.9, amp: 1.1, pattern: 'sharp', color: '#ff3399' },
-    'yoga': { freq: 0.3, amp: 0.4, pattern: 'smooth', color: '#9d4edd' },
-    'free_training': { freq: 0.7, amp: 0.9, pattern: 'moderate', color: '#06ffa5' },
-    'upper_limb_training': { freq: 0.6, amp: 0.8, pattern: 'moderate', color: '#ffbe0b' },
-    'lower_limb_training': { freq: 0.6, amp: 0.8, pattern: 'moderate', color: '#fb5607' },
-    'core_training': { freq: 0.6, amp: 0.7, pattern: 'moderate', color: '#ff006e' },
-    'physical_training': { freq: 0.7, amp: 0.9, pattern: 'moderate', color: '#8338ec' },
-    'pilates': { freq: 0.4, amp: 0.5, pattern: 'smooth', color: '#c77dff' },
-    'flexibility_training': { freq: 0.3, amp: 0.4, pattern: 'smooth', color: '#e0aaff' },
-    'indoor_walking': { freq: 0.5, amp: 0.6, pattern: 'smooth', color: '#48cae4' },
-    'indoor_riding': { freq: 0.8, amp: 1.0, pattern: 'sharp', color: '#0096c7' },
-    'weight_lifting': { freq: 0.5, amp: 1.0, pattern: 'moderate', color: '#ff9500' },
-    'waist_training': { freq: 0.6, amp: 0.7, pattern: 'moderate', color: '#ff6b6b' },
-    'back_training': { freq: 0.6, amp: 0.8, pattern: 'moderate', color: '#ffd166' },
-    'high_interval_training': { freq: 1.2, amp: 1.4, pattern: 'sharp', color: '#ef233c' },
-    'rope_skipping': { freq: 1.0, amp: 1.2, pattern: 'sharp', color: '#d90429' },
-  };
-  
+
   let sportsList = [];
   let processedData = [];
   let totalHours = 0;
