@@ -50,7 +50,7 @@
       
       <h2 class="warning-title">View on Tablet or Desktop</h2>
       <p class="warning-text">
-        This data visualization is optimized for larger screens. Please view on a tablet (iPad) or desktop computer for the best experience.
+        This data visualization is optimized for larger screens. Please view on a tablet or desktop computer for the best experience.
       </p>
     </div>
   </div>
