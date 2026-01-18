@@ -4,16 +4,15 @@
   let showWarning = false;
   
   function checkOrientation() {
-    // Check if device is mobile/tablet (max-width: 1024px) and in portrait mode
-    const isMobileOrTablet = window.innerWidth <= 1024;
+    // Show warning for tablets (width > 667px) in portrait mode
+    const isTablet = window.innerWidth > 667;
     const isPortrait = window.innerHeight > window.innerWidth;
-    showWarning = isMobileOrTablet && isPortrait;
+    showWarning = isTablet && isPortrait;
   }
   
   onMount(() => {
     checkOrientation();
     
-    // Listen for orientation changes
     window.addEventListener('resize', checkOrientation);
     window.addEventListener('orientationchange', checkOrientation);
     
@@ -27,14 +26,14 @@
 {#if showWarning}
   <div class="orientation-overlay" role="alert" aria-live="polite">
     <div class="orientation-content">
-      <!-- Rotate Phone Icon -->
+      <!-- Rotate Icon -->
       <svg 
         class="rotate-icon" 
         viewBox="0 0 100 100" 
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        <!-- Phone -->
+        <!-- Tablet -->
         <rect x="30" y="15" width="40" height="70" rx="5" 
               fill="none" stroke="currentColor" stroke-width="2"/>
         <circle cx="50" cy="78" r="3" fill="currentColor"/>
@@ -62,14 +61,8 @@
       
       <h2 class="warning-title">Rotate Your Device</h2>
       <p class="warning-text">
-        For the best experience, please rotate your device to landscape mode
+        For the best experience, please rotate your device to landscape mode.
       </p>
-      
-      <!-- Alternative: Thai text -->
-      <!-- <h2 class="warning-title">กรุณาหมุนหน้าจอ</h2>
-      <p class="warning-text">
-        เพื่อประสบการณ์ที่ดีที่สุด กรุณาหมุนอุปกรณ์เป็นแนวนอน
-      </p> -->
     </div>
   </div>
 {/if}
@@ -82,7 +75,7 @@
     width: 100vw;
     height: 100vh;
     background: #0a0a0a;
-    z-index: 99999;
+    z-index: 99998;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -127,7 +120,7 @@
   }
   
   .warning-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 300;
     color: #ffffff;
     margin-bottom: 16px;
@@ -136,7 +129,7 @@
   }
   
   .warning-text {
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.7);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -153,8 +146,8 @@
     }
   }
   
-  /* Hide overlay in landscape or on large screens */
-  @media (orientation: landscape), (min-width: 1025px) {
+  /* Hide overlay in landscape */
+  @media (orientation: landscape) {
     .orientation-overlay {
       display: none;
     }

@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import DeviceWarning from './components/DeviceWarning.svelte';
   import OrientationWarning from './components/OrientationWarning.svelte';
   import Landing from './components/Landing.svelte';
   import ScrollSection from './components/ScrollSection.svelte';
@@ -137,6 +138,9 @@
     navigateToSection(sectionIndex);
   }
 </script>
+
+<!-- Device Warning: Block smartphones -->
+<DeviceWarning />
 
 <!-- Orientation Warning Overlay (for mobile/tablet portrait mode) -->
 <OrientationWarning />
