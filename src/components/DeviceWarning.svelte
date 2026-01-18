@@ -2,11 +2,18 @@
   import { onMount } from 'svelte';
   
   let showWarning = false;
+  let overlayElement;
   
   function checkDevice() {
-    // Block only smartphones (width <= 667px) - iPhone landscape size
     const isSmartphone = window.innerWidth <= 667;
     showWarning = isSmartphone;
+  }
+  
+  function handleKeydown(event) {
+    // Trap focus within overlay
+    if (event.key === 'Tab') {
+      event.preventDefault();
+    }
   }
   
   onMount(() => {
@@ -15,15 +22,33 @@
     window.addEventListener('resize', checkDevice);
     window.addEventListener('orientationchange', checkDevice);
     
+    // Focus overlay when shown
+    if (showWarning && overlayElement) {
+      overlayElement.focus();
+    }
+    
     return () => {
       window.removeEventListener('resize', checkDevice);
       window.removeEventListener('orientationchange', checkDevice);
     };
   });
+  
+  $: if (showWarning && overlayElement) {
+    overlayElement.focus();
+  }
 </script>
 
 {#if showWarning}
-  <div class="device-overlay" role="alert" aria-live="polite">
+  <div 
+    class="device-overlay" 
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="warning-title"
+    aria-describedby="warning-text"
+    bind:this={overlayElement}
+    tabindex="-1"
+    on:keydown={handleKeydown}
+  >
     <div class="device-content">
       <!-- Tablet/Desktop Icon -->
       <svg 
@@ -31,8 +56,8 @@
         viewBox="0 0 100 100" 
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        role="img"
       >
-        <!-- Tablet/Monitor -->
         <rect x="15" y="25" width="70" height="50" rx="4" 
               fill="none" stroke="currentColor" stroke-width="2"/>
         <line x1="20" y1="70" x2="80" y2="70" 
@@ -48,8 +73,8 @@
               stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
       
-      <h2 class="warning-title">View on Tablet or Desktop</h2>
-      <p class="warning-text">
+      <h2 id="warning-title" class="warning-title">View on Tablet or Desktop</h2>
+      <p id="warning-text" class="warning-text">
         This data visualization is optimized for larger screens. Please view on a tablet or desktop computer for the best experience.
       </p>
     </div>
@@ -69,6 +94,10 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
+  }
+  
+  .device-overlay:focus {
+    outline: none;
   }
   
   .device-content {
