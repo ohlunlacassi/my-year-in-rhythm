@@ -36,7 +36,7 @@ A simple comparison chart shows how health appointments and study-related events
 
 ---
 
-## 📱 Device Optimization
+## Device Optimization
 
 - **Desktop**: Full experience with all visualizations
 - **Tablet**: Optimized for landscape orientation
