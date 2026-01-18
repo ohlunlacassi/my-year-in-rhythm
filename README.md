@@ -10,27 +10,27 @@ The visualization is designed as a scrollytelling experience and is **optimized 
 
 ## Features
 
-### Pulse & Pause
+### 1. Pulse & Pause
 
 Three animated metric cards summarize the year at a glance: total training time, active days, and rest days.
 
-### Steps Traveled
+### 2. Steps Traveled
 
 An animated running track visualizes total steps and distance, enhanced with a playful real-world comparison.
 
-### The Ups and Downs
+### 3. The Ups and Downs
 
 A heartbeat-style waveform shows daily training intensity across the year. Users can filter by sport, while key life events are marked directly on the timeline.
 
-### Energy Expenditure
+### 4. Energy Expenditure
 
 A central beating heart visualizes total calories burned. Surrounding color-coded pulses represent different sports, showing how each activity contributes to overall energy expenditure.
 
-### The Rhythm of Progress
+### 5. The Rhythm of Progress
 
 An interactive timeline tracks training progress over time, highlighting milestones, pace changes, and cumulative statistics.
 
-### Life Events Impact on Training
+### 6. Life Events Impact on Training
 
 A simple comparison chart shows how health appointments and study-related events affected average training time compared to normal days.
 
