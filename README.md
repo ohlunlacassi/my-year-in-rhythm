@@ -166,7 +166,3 @@ The project runs out of the box using the included data.
 Re-running calendar_viz/convert.py is optional and only needed when new .ics files are added.
 
 All personal data has been anonymized and reduced to non-identifiable aggregates.
-
-## License
-
-This project was created for academic purposes.
