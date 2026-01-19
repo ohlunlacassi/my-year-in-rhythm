@@ -818,12 +818,4 @@
       padding: 20px 10px;
     }
   }
-  
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    .track-container svg text {
-      stroke: none;
-      fill: white;
-    }
-  }
 </style>
