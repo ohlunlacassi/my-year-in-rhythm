@@ -679,12 +679,4 @@ ${d.category === 'normal' ? 'Baseline' : formatPercentage(d.change) + ' vs basel
       padding: 20px 10px;
     }
   }
-  
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    .impact-container svg text {
-      stroke: none;
-      fill: white;
-    }
-  }
 </style>
