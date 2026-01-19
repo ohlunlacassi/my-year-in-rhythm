@@ -27,7 +27,6 @@
 
 <nav 
   class="progress-container"
-  role="navigation"
   aria-label="Section navigation"
 >
   {#each Array(total) as _, i}
