@@ -372,6 +372,50 @@
     border-width: 0;
   }
   
+  /* ===================================
+     SMARTPHONE RESPONSIVE
+     =================================== */
+  
+  /* Smartphone Landscape */
+  @media only screen and (max-width: 932px) and (orientation: landscape) {
+    .track-container {
+      max-width: 600px;
+      margin: -60px auto 0 auto;
+      padding: 0 20px 30px 20px;
+    }
+    
+    .track-svg {
+      filter: drop-shadow(0 2px 12px rgba(53, 209, 197, 0.15));
+    }
+    
+    .fun-fact {
+      margin-top: -60px;
+      padding: 12px;
+    }
+    
+    .fun-fact p {
+      font-size: 0.85rem;
+    }
+  }
+  
+  /* iPhone SE Landscape */
+  @media only screen and (max-width: 667px) and (orientation: landscape) {
+    .track-container {
+      max-width: 500px;
+      margin: -50px auto 0 auto;
+      padding: 0 16px 20px 16px;
+    }
+    
+    .fun-fact {
+      margin-top: -50px;
+      padding: 10px;
+    }
+    
+    .fun-fact p {
+      font-size: 0.8rem;
+    }
+  }
+  
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .runner-trail {
@@ -380,12 +424,6 @@
     
     .fun-fact {
       animation: none;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .stat-value {
-      font-size: 1.5rem;
     }
   }
 </style>
