@@ -6,6 +6,8 @@ The project covers training data from **October 2024 to December 2025** and focu
 
 The visualization is designed as a scrollytelling experience and is **optimized for tablets and desktop computers**.
 
+[Link to Website](https://my-year-in-rhythm.vercel.app/)
+
 ---
 
 ## Features
